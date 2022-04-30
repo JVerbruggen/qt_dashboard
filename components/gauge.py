@@ -4,11 +4,12 @@ from utils.extra_math import *
 from utils.drawing import *
 
 class Gauge:
+    LOWER_THETA = 225/180*3.1415
+    UPPER_THETA = -45/180*3.1415
+    DELTA_THETA = UPPER_THETA - LOWER_THETA
+
     def __init__(self, cx:int, cy:int, lower_val:int=0, upper_val:int=100, display_precision:int=0, display_description:str="", display_unit:str="", size=150, hint_range=5):
         self.theta = 0
-        self.lower_theta = 225/180*3.1415
-        self.upper_theta = -45/180*3.1415
-        self.delta_theta = self.upper_theta - self.lower_theta
         self.cx = cx
         self.cy = cy
         self.lower_val = lower_val
@@ -39,7 +40,7 @@ class Gauge:
         for i in range(self.hint_range-2): hint_values += ["{:.0f}".format(self.lower_val + self.delta_val/(self.hint_range-1)* (i+1))]
         hint_values += [self.upper_val]
         for i, value in enumerate(hint_values):
-            theta = self.lower_theta + self.delta_theta/(self.hint_range-1) * (i)
+            theta = self.LOWER_THETA + self.DELTA_THETA/(self.hint_range-1) * (i)
             (x,y) = point_at_angle(self.cx, self.cy, theta, self.size)
             self.hints += [(x,y,value)]
 
@@ -49,7 +50,7 @@ class Gauge:
         if value < self.lower_val: value = self.lower_val
         elif value > self.upper_val: value = self.upper_val
 
-        self.theta = (value-self.lower_val)/self.delta_val*self.delta_theta+self.lower_theta
+        self.theta = (value-self.lower_val)/self.delta_val*self.DELTA_THETA+self.LOWER_THETA
 
     def draw(self, painter):
         # Temporary for demo
