@@ -2,20 +2,23 @@ import math
 from PySide6 import QtCore, QtWidgets, QtGui
 from utils.extra_math import *
 from utils.drawing import *
+from components.variable.watchable_variable import WatchableVariable
 
 class Gauge:
     LOWER_THETA = 225/180*3.1415
     UPPER_THETA = -45/180*3.1415
     DELTA_THETA = UPPER_THETA - LOWER_THETA
 
-    def __init__(self, cx:int, cy:int, lower_val:int=0, upper_val:int=100, display_precision:int=0, display_description:str="", display_unit:str="", size=150, hint_range=5):
+    def __init__(self, watching_variable: WatchableVariable, cx:int, cy:int, display_precision:int=0, display_description:str="", display_unit:str="", size=150, hint_range=5):
+        self.watching_variable = watching_variable
+        
         self.theta = 0
         self.cx = cx
         self.cy = cy
-        self.lower_val = lower_val
-        self.upper_val = upper_val
+        self.lower_val = watching_variable.get_lower_value()
+        self.upper_val = watching_variable.get_upper_value()
         self.delta_val = self.upper_val - self.lower_val
-        self.value = lower_val
+        self.value = self.lower_val
         self.display_precision = display_precision
         self.display_unit = display_unit
 
@@ -54,7 +57,8 @@ class Gauge:
 
     def draw(self, painter):
         # Temporary for demo
-        self.update_value(((self.value + 0.1 - self.lower_val) % (self.upper_val - self.lower_val)) + self.lower_val)
+        # self.update_value(((self.value + 0.1 - self.lower_val) % (self.upper_val - self.lower_val)) + self.lower_val)
+        self.update_value(self.watching_variable.get_value())
 
         self.__draw_hints(painter)
         self.__draw_structure(painter)        
