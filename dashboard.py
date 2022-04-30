@@ -21,7 +21,7 @@ class Dashboard(QtWidgets.QWidget):
         self.timer.start(1000/FPS)
 
         self.drawables = [
-            Gauge(WINDOW_WIDTH/2 - 200,WINDOW_HEIGHT-200,0,200,0,display_description="SPEED",display_unit=" km/h"),
+            Gauge(WINDOW_WIDTH/2 - 200,WINDOW_HEIGHT-200,0,240,0,display_description="SPEED",display_unit=" km/h",hint_range=13),
             Gauge(WINDOW_WIDTH/2 + 200,WINDOW_HEIGHT-200,0,60,1,display_description="MOTOR SPEED",display_unit=" rpm"),
             Gauge(WINDOW_WIDTH/2 - 150,WINDOW_HEIGHT-500,50,150,0,display_description="TEMP",size=75,hint_range=5)
         ]
