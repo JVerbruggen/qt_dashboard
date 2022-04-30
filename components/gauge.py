@@ -56,8 +56,6 @@ class Gauge:
         self.theta = (value-self.lower_val)/self.delta_val*self.DELTA_THETA+self.LOWER_THETA
 
     def draw(self, painter):
-        # Temporary for demo
-        # self.update_value(((self.value + 0.1 - self.lower_val) % (self.upper_val - self.lower_val)) + self.lower_val)
         self.update_value(self.watching_variable.get_value())
 
         self.__draw_hints(painter)
