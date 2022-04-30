@@ -14,7 +14,7 @@ class Gauge:
         self.lower_val = lower_val
         self.upper_val = upper_val
         self.delta_val = self.upper_val - self.lower_val
-        self.value = 0
+        self.value = lower_val
         self.display_precision = display_precision
         self.display_unit = display_unit
 
@@ -52,23 +52,23 @@ class Gauge:
         self.theta = (value-self.lower_val)/self.delta_val*self.delta_theta+self.lower_theta
 
     def draw(self, painter):
-        self.update_value(self.value + 0.1)
-
-        length = self.size
-
-        from_x = self.cx
-        from_y = self.cy
-        to_x = math.cos(self.theta)*length+self.cx
-        to_y = -math.sin(self.theta)*length+self.cy
+        # Temporary for demo
+        self.update_value(((self.value + 0.1 - self.lower_val) % (self.upper_val - self.lower_val)) + self.lower_val)
 
         self.__draw_hints(painter)
-
-        draw_arc(painter, self.cx, self.cy, length+20, -45, 270, width=1)
+        self.__draw_structure(painter)        
+        self.__draw_rod(painter)
+        self.__draw_info(painter)
+        
+    def __draw_structure(self, painter):
+        draw_arc(painter, self.cx, self.cy, self.size+20, -45, 270, width=1)
+    
+    def __draw_rod(self, painter):
+        from_x = self.cx
+        from_y = self.cy
+        to_x = math.cos(self.theta)*self.size+self.cx
+        to_y = -math.sin(self.theta)*self.size+self.cy
         draw_rounded_line(painter, QtCore.QPoint(from_x,from_y), QtCore.QPoint(to_x, to_y), width=7)
-        painter.setFont(self.display_value_font)
-        painter.drawText(self.cx-length, self.cy+length*0.4, length*2, 100, 0x0004, "{:.{}f}".format(self.value, self.display_precision) + self.display_unit)
-        painter.setFont(self.display_description_font)
-        painter.drawText(self.cx-length, self.cy+length*0.2, length*2, 100, 0x0004, self.display_description)
 
     def __draw_hints(self, painter):
         hintvalues_distance = self.size/2
@@ -77,3 +77,7 @@ class Gauge:
 
         for (x,y,value) in self.hints:
             painter.drawText(x-25,y-25, 50, 50, 0x0084, str(value))
+
+    def __draw_info(self, painter):
+        draw_text_at(painter, self.cx-self.size, self.cy+self.size*0.4, self.size*2, 100, "{:.{}f}".format(self.value, self.display_precision) + self.display_unit, self.display_value_font)
+        draw_text_at(painter, self.cx-self.size, self.cy+self.size*0.4-25, self.size*2, 100, self.display_description, self.display_description_font)

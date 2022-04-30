@@ -18,3 +18,7 @@ def draw_arc(painter: QtGui.QPainter, cx: int, cy: int, rad: int, startDeg: int,
         painter.setPen(pen)
 
     painter.drawArc(cx-rad, cy-rad, rad*2, rad*2, startDeg*16, lengthDeg*16)
+
+def draw_text_at(painter: QtGui.QPainter, x:int, y:int, w:int, h:int, text:str, font:QtGui.QFont=None):
+    if font: painter.setFont(font)
+    painter.drawText(x,y,w,h,0x0004,text)

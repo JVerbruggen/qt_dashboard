@@ -24,8 +24,8 @@ class Dashboard(QtWidgets.QWidget):
 
         self.drawables = [
             Gauge(width/2 - 200,height-200,0,200,0,display_description="SPEED",display_unit=" km/h"),
-            Gauge(width/2 + 200,height-200,0,60,1,display_unit=" rpm"),
-            Gauge(width/2 - 150,height-500,0,150,0,size=75,hint_range=4)
+            Gauge(width/2 + 200,height-200,0,60,1,display_description="MOTOR SPEED",display_unit=" rpm"),
+            Gauge(width/2 - 150,height-500,50,150,0,display_description="TEMP",size=75,hint_range=5)
         ]
 
     def paintEvent(self, event):
