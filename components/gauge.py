@@ -61,7 +61,7 @@ class Gauge:
         self.__draw_info(painter)
         
     def __draw_structure(self, painter):
-        draw_arc(painter, self.cx, self.cy, self.size+20, -45, 270, width=1)
+        draw_arc(painter, self.cx, self.cy, self.size+20, -45, 270, width=3)
     
     def __draw_rod(self, painter):
         from_x = self.cx

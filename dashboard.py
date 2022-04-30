@@ -13,10 +13,11 @@ class Dashboard(QtWidgets.QWidget):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout(self)
         
-        pal = QtGui.QPalette()
-        pal.setColor(QtGui.QPalette.Window, QtGui.qRgb(33, 32, 46))
+        # pal = QtGui.QPalette()
+        # pal.setColor(QtGui.QPalette.Window, QtGui.qRgb(33, 32, 46))
         self.setAutoFillBackground(True)
-        self.setPalette(pal)
+        # self.setPalette(pal)
+        self.setStyleSheet("* {background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #444257, stop:1 #21202e);}")
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.update)
