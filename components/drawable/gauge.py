@@ -3,7 +3,7 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from utils.extra_math import *
 from utils.drawing import *
 from components.drawable.drawable import Drawable
-from components.variable.watchable_variable import WatchableVariable
+from components.variable.watchable_variable import WatchableRangeVariable
 
 class Gauge(Drawable):
     UPPER_DEG = 225
@@ -21,7 +21,7 @@ class Gauge(Drawable):
     DESC_FONT_SIZE = 18
 
     def __init__(self, 
-            watching_variable: WatchableVariable, 
+            watching_variable: WatchableRangeVariable, 
             cx:int, 
             cy:int, 
             display_precision:int=0, 

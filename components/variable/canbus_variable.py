@@ -1,7 +1,7 @@
-from components.variable.watchable_variable import WatchableVariable
+from components.variable.watchable_variable import WatchableRangeVariable
 import can
 
-class CanbusVariable(WatchableVariable):
+class CanbusVariable(WatchableRangeVariable):
     def __init__(self, default_value = 0, lower_val = 0, upper_val = 100):
         self.value = default_value
         self.lower_val = lower_val
