@@ -2,6 +2,7 @@ from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
 from components.variable.canbus_variable import *
+from components.drawable.blinker import SvgBlinker
 
 class DemoGaugeConfig:
     GAUGE_OFFX_INNER = 125
@@ -35,4 +36,6 @@ class DemoGaugeConfig:
             Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_OUTER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_INNER,window_height-self.GAUGE_OFFY_TOP,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_INNER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
+            SvgBlinker("assets/left-arrow.svg", 150,150,100),
+            SvgBlinker("assets/right-arrow.svg", 150,350,100),
         ]
