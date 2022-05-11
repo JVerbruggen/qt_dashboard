@@ -1,15 +1,17 @@
-from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6 import QtCore, QtGui
 
-def draw_rounded_line(painter: QtGui.QPainter, fromPoint: QtCore.QPoint, toPoint: QtCore.QPoint, width:int=None):
+
+def draw_rounded_line(painter: QtGui.QPainter, from_point: QtCore.QPoint, to_point: QtCore.QPoint, width: int = None):
     if width:
         pen = QtGui.QPen(QtGui.Qt.white)
         pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
         pen.setWidth(width)
         painter.setPen(pen)
 
-    painter.drawLine(QtCore.QLine(fromPoint, toPoint))
+    painter.drawLine(QtCore.QLine(from_point, to_point))
 
-def draw_arc(painter: QtGui.QPainter, cx: int, cy: int, rad: int, startDeg: int, lengthDeg: int, width:int=None):
+
+def draw_arc(painter: QtGui.QPainter, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None):
     if width:
         pen = QtGui.QPen(QtGui.Qt.white)
         pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
@@ -17,8 +19,9 @@ def draw_arc(painter: QtGui.QPainter, cx: int, cy: int, rad: int, startDeg: int,
         pen.setWidth(width)
         painter.setPen(pen)
 
-    painter.drawArc(cx-rad, cy-rad, rad*2, rad*2, startDeg*16, lengthDeg*16)
+    painter.drawArc(cx - rad, cy - rad, rad * 2, rad * 2, start_deg * 16, length_deg * 16)
 
-def draw_text_at(painter: QtGui.QPainter, x:int, y:int, w:int, h:int, text:str, font:QtGui.QFont=None):
+
+def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = None):
     if font: painter.setFont(font)
-    painter.drawText(x,y,w,h,0x0004,text)
+    painter.drawText(x, y, w, h, 0x0004, text)
