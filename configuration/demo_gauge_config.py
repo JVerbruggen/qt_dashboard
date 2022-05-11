@@ -1,10 +1,12 @@
 from typing import List
 
+from PySide6 import QtGui
+
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
 from components.variable.canbus_variable import *
-from components.drawable.blinker import SvgBlinker
+from components.drawable.blinker import SvgIndicator
 
 
 class DemoGaugeConfig:
@@ -27,6 +29,8 @@ class DemoGaugeConfig:
         variable_motorspeed = DemoLoopingVariable(0, 0, 60)
         variable_temp = DemoLoopingVariable(50, 50, 240)
 
+        variable_blinker = IntervalOnOffVariable(500)
+
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
                   display_description="SPEED", display_unit="km/h", hint_range=13),
@@ -34,14 +38,24 @@ class DemoGaugeConfig:
                   display_description="MOTOR SPEED", display_unit="rpm"),
             Gauge(variable_temp, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
                   display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
-            # dummys
-            Gauge(variable_dummy, window_width/2 - self.GAUGE_OFFX_OUTER,window_height-self.GAUGE_OFFY_TOP,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 - self.GAUGE_OFFX_INNER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 - self.GAUGE_OFFX_OUTER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_OUTER,window_height-self.GAUGE_OFFY_TOP,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_OUTER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_INNER,window_height-self.GAUGE_OFFY_TOP,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            Gauge(variable_dummy, window_width/2 + self.GAUGE_OFFX_INNER,window_height-self.GAUGE_OFFY_BTM,0,display_description="dummy",size=self.SMALL_GAUGE_SIZE,hint_range=self.SMALL_GAUGE_HINTS),
-            SvgBlinker("assets/left-arrow.svg", 150,150,100),
-            SvgBlinker("assets/right-arrow.svg", 150,350,100),
+
+            # dummy's
+
+            Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+            Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+
+            SvgIndicator("assets/left-arrow.svg", variable_blinker, QtGui.QColor.fromRgb(41, 110, 1), 150, 150, 100),
+            SvgIndicator("assets/right-arrow.svg", variable_blinker, QtGui.QColor.fromRgb(41, 110, 1), 150, 350, 100),
         ]

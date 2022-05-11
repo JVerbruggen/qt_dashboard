@@ -65,7 +65,9 @@ class Gauge(Drawable):
         hint_values = [self.lower_val]
         for i in range(self.hint_range - 2): hint_values += [
             "{:.0f}".format(self.lower_val + self.delta_val / (self.hint_range - 1) * (i + 1))]
+
         hint_values += [self.upper_val]
+
         for i, value in enumerate(hint_values):
             theta = self.LOWER_THETA + self.DELTA_THETA / (self.hint_range - 1) * (i)
             (x, y) = point_at_angle(self.cx, self.cy, theta, self.size)

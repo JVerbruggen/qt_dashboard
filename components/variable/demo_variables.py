@@ -1,4 +1,4 @@
-from components.variable.watchable_variable import WatchableRangeVariable
+from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
 from PySide6 import QtCore
 
 
@@ -14,7 +14,7 @@ class DemoLoopingVariable(WatchableRangeVariable):
 
     def update(self):
         self.value = ((self.value + self.increment - self.lower_val) % (
-                    self.upper_val - self.lower_val)) + self.lower_val
+                self.upper_val - self.lower_val)) + self.lower_val
 
     def get_value(self):
         return self.value
@@ -40,3 +40,18 @@ class DemoStaticVariable(WatchableRangeVariable):
 
     def get_upper_value(self):
         return self.upper_val
+
+
+class IntervalOnOffVariable(WatchableVariable):
+    def __init__(self, interval):
+        self.interval = interval
+        self.value = 0
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(interval)
+
+    def get_value(self):
+        return self.value
+
+    def update(self):
+        self.value = 1 if self.value == 0 else 0
