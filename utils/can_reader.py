@@ -16,8 +16,7 @@ def start_can():
 def start_serial():
     with serial.Serial('/dev/ttyUSB0', 115200, timeout=1) as ser:
         while True:
-            x = ser.read()
+            x = ser.readline()
             print(x)
-        # s = ser.read(8)
 
 start_serial()
