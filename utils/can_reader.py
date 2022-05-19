@@ -1,9 +1,21 @@
 import can
+import serial
 
-bus = can.Bus(interface='serial', channel='/dev/ttyUSB0')
+device = '/dev/ttyUSB0'
 
-while True:
-    print("loop")
-    for msg in bus:
-        print("for")
-        print(msg.data)
+bus = can.Bus(interface='serial', channel=device)
+
+
+def start_can():
+    while True:
+        print("loop")
+        for msg in bus:
+            print("for")
+            print(msg.data)
+
+def start_serial():
+    with serial.Serial('/dev/ttyUSB0', 115200, timeout=1) as ser:
+        x = ser.read()
+        # s = ser.read(8)
+
+start_serial()
