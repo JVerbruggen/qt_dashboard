@@ -29,6 +29,8 @@ class DemoGaugeConfig:
         variable_motorspeed = DemoLoopingVariable(0, 0, 60)
         variable_temp = DemoLoopingVariable(50, 50, 240)
 
+        variable_can_speed = CanbusVariable(0, 0, 100, 0x0004)
+
         variable_blinker = IntervalOnOffVariable(500)
 
         return [
