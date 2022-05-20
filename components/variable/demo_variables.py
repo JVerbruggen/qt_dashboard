@@ -18,6 +18,9 @@ class DemoLoopingVariable(WatchableRangeVariable):
 
     def get_value(self):
         return self.value
+    
+    def set_value(self, value):
+        self.value = value
 
     def get_lower_value(self):
         return self.lower_val
@@ -31,6 +34,9 @@ class DemoStaticVariable(WatchableRangeVariable):
         self.value = default_value
         self.lower_val = lower_val
         self.upper_val = upper_val
+
+    def set_value(self, value):
+        self.value = value
 
     def get_value(self):
         return self.value
@@ -52,6 +58,9 @@ class IntervalOnOffVariable(WatchableVariable):
 
     def get_value(self):
         return self.value
+    
+    def set_value(self, value):
+        self.value = value
 
     def update(self):
         self.value = 1 if self.value == 0 else 0

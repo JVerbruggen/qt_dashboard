@@ -1,6 +1,7 @@
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from configuration.demo_gauge_config import DemoGaugeConfig
+from configuration.factory.demo_factory import DemoFactory
 
 WINDOW = (1600, 900)
 FPS = 60
@@ -35,7 +36,8 @@ class Dashboard(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    widget = Dashboard(DemoGaugeConfig())
+    config_factory = DemoFactory()
+    widget = Dashboard(config_factory.create())
     widget.setFixedSize(WINDOW[0], WINDOW[1])
     widget.show()
 
