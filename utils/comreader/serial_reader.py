@@ -31,3 +31,5 @@ class SerialReader(ComReader):
                 if len(raw) == 0: continue
                 data = json.loads(raw) # TODO: Should be unnecessary
                 self.__update_variable(data["identifier"], int(data["value"].split()[0], 16))
+
+

@@ -5,7 +5,7 @@ from PySide6 import QtGui
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
-from components.variable.canbus_variable import *
+from components.variable.simple_variable import SimpleVariable
 from components.drawable.blinker import SvgIndicator
 from utils.comreader.com_reader import ComReader
 
