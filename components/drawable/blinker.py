@@ -5,6 +5,10 @@ from components.variable.watchable_variable import WatchableVariable
 
 
 class SvgIndicator(Drawable):
+    """
+    An indicater depicted by a SVG icon that listens to a variable and displays its value (on or off).
+    """
+
     def __init__(self, svg_filepath, watchable_variable: WatchableVariable, on_color: QtGui.QColor, x: int, y: int,
                  size: int):
         self.svg_filepath = svg_filepath

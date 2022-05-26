@@ -5,6 +5,10 @@ from components.variable.watchable_variable import WatchableRangeVariable
 
 
 class Gauge(Drawable):
+    """
+    A gauge that listens to a variable and displays its value.
+    """
+
     UPPER_DEG = 225
     LOWER_DEG = -45
 

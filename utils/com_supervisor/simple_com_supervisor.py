@@ -19,8 +19,8 @@ class SimpleComSupervisor(ComSupervisor):
         self.mappings = mappings
         self.readable = readable
 
-    def register(self, identifier, variable, mapping: Mapper):
-        self.mappings[identifier] = (variable, mapping)
+    def register(self, identifier, variable, mapper: Mapper):
+        self.mappings[identifier] = (variable, mapper)
 
     def start(self):
         thread = Thread()
@@ -34,9 +34,9 @@ class SimpleComSupervisor(ComSupervisor):
 
     def __update_variable(self, identifier, value):
         if identifier not in self.mappings: return
-        (variable, mapping) = self.mappings[identifier]
+        (variable, mapper) = self.mappings[identifier]
         if variable is None: return
-        mapped_value = mapping.map(value)
+        mapped_value = mapper.map(value)
         variable.set_value(mapped_value)
 
     def __loop(self, stop_event: Event):

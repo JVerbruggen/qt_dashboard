@@ -1,7 +1,8 @@
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
 from configuration.demo_dashboard_config import DemoDashboardConfig
-from configuration.factory.demo_factory import DemoFactory
+from configuration.setup.demo_setup import DemoSetup
+from configuration.setup.serial_setup import SerialSetup
 
 WINDOW = (1600, 900)
 FPS = 60
@@ -9,6 +10,11 @@ BACKGROUND_STYLE = "* {background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0
 
 
 class Dashboard(QtWidgets.QWidget):
+    """
+    Dashboard that fits in QT.
+    Extends QWidget, where paintEvent is called by QT to update the widget.
+    """
+
     def __init__(self, configuration):
         super().__init__()
         self.layout = QtWidgets.QVBoxLayout(self)
@@ -36,8 +42,9 @@ class Dashboard(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    config_factory = DemoFactory()
-    widget = Dashboard(config_factory.create())
+    setup = DemoSetup()
+    # setup = SerialSetup()
+    widget = Dashboard(setup.create())
     widget.setFixedSize(WINDOW[0], WINDOW[1])
     widget.show()
 

@@ -2,6 +2,7 @@ from typing import List
 
 from PySide6 import QtGui
 
+from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
@@ -10,7 +11,7 @@ from components.drawable.blinker import SvgIndicator
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 
-class DemoDashboardConfig:
+class DemoDashboardConfig(DashboardConfig):
     """
     Demo dashboard configuration.
     Provides exact layout of all elements.
@@ -30,16 +31,13 @@ class DemoDashboardConfig:
     def __init__(self, supervisor: ComSupervisor):	
         self.supervisor = supervisor
 
-    def get_drawables(self, window: (int, int)) -> List[Drawable]:
+    def get_drawables(self, window):
         (window_width, window_height) = window
 
-        #   variable_speed = DemoLoopingVariable(0, 0, 240, 0.25)
         variable_speed = SimpleRangeVariable(0, 0, 240)
         variable_dummy = SimpleRangeVariable(40, 0, 100)
         variable_motorspeed = DemoLoopingVariable(0, 0, 60)
         variable_temp = DemoLoopingVariable(50, 50, 240)
-
-        #   variable_can_speed = CanbusVariable(0, 0, 100)
 
         variable_blinker = IntervalOnOffVariable(500)
 

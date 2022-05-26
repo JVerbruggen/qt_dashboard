@@ -3,6 +3,11 @@ from PySide6 import QtCore
 
 
 class DemoLoopingVariable(WatchableRangeVariable):
+    """
+    A range variable that increments on update.
+    Used for demonstration purposes.
+    """
+
     def __init__(self, default_value=0, lower_val=0, upper_val=100, increment=0.1, ms=10):
         self.value = default_value
         self.lower_val = lower_val
@@ -30,6 +35,11 @@ class DemoLoopingVariable(WatchableRangeVariable):
 
 
 class DemoStaticVariable(WatchableRangeVariable):
+    """
+    A range variable that doesn't change unless value is set.
+    Used for demonstration purposes.
+    """
+
     def __init__(self, default_value=0, lower_val=0, upper_val=100):
         self.value = default_value
         self.lower_val = lower_val
@@ -49,6 +59,11 @@ class DemoStaticVariable(WatchableRangeVariable):
 
 
 class IntervalOnOffVariable(WatchableVariable):
+    """
+    A variable that changes between on and off on update.
+    Used for demonstration purposes.
+    """
+
     def __init__(self, interval):
         self.interval = interval
         self.value = 0
