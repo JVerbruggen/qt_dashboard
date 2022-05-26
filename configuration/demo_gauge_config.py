@@ -7,8 +7,8 @@ from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable
 from components.drawable.blinker import SvgIndicator
-from utils.comreader.com_reader import ComReader
-
+from utils.com_supervisor.com_supervisor import ComSupervisor
+from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 
 class DemoGaugeConfig:
     GAUGE_OFFX_INNER = 125
@@ -22,8 +22,8 @@ class DemoGaugeConfig:
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, comreader: ComReader):	
-        self.comreader = comreader
+    def __init__(self, supervisor: ComSupervisor):	
+        self.supervisor = supervisor
 
     def get_drawables(self, window: (int, int)) -> List[Drawable]:
         (window_width, window_height) = window
@@ -38,8 +38,8 @@ class DemoGaugeConfig:
 
         variable_blinker = IntervalOnOffVariable(500)
 
-        self.comreader.register('0x18', variable_speed)
-        self.comreader.start()
+        self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
+        self.supervisor.start()
 
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,

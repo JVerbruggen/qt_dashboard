@@ -1,4 +1,4 @@
-class ComReader():
+class ComSupervisor():
     def register(self, identifier, variable):
         raise NotImplementedError()
 
