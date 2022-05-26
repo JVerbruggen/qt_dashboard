@@ -5,12 +5,17 @@ from PySide6 import QtGui
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
-from components.variable.simple_variable import SimpleVariable
+from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
 from components.drawable.blinker import SvgIndicator
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 
-class DemoGaugeConfig:
+class DemoDashboardConfig:
+    """
+    Demo dashboard configuration.
+    Provides exact layout of all elements.
+    """
+
     GAUGE_OFFX_INNER = 125
     GAUGE_OFFX_OUTER = 380
     GAUGE_OFFY_TOP = 500
@@ -29,8 +34,8 @@ class DemoGaugeConfig:
         (window_width, window_height) = window
 
         #   variable_speed = DemoLoopingVariable(0, 0, 240, 0.25)
-        variable_speed = DemoStaticVariable(0, 0, 240)
-        variable_dummy = DemoStaticVariable(40, 0, 100)
+        variable_speed = SimpleRangeVariable(0, 0, 240)
+        variable_dummy = SimpleRangeVariable(40, 0, 100)
         variable_motorspeed = DemoLoopingVariable(0, 0, 60)
         variable_temp = DemoLoopingVariable(50, 50, 240)
 
@@ -48,9 +53,6 @@ class DemoGaugeConfig:
                 display_description="MOTOR SPEED", display_unit="rpm"),
             Gauge(variable_temp, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
                 display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
-
-            # dummy's
-
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,

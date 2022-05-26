@@ -7,6 +7,12 @@ from functools import partial
 import sys
 
 class SimpleComSupervisor(ComSupervisor):
+    """
+    Supervises external communication to the dashboard variables.
+    Uses a dict to map identifiers to dashboard variables.
+    Takes a readable to read info from.
+    """
+
     ENCODING = 'utf-8'
 
     def __init__(self, readable: Readable, mappings: dict = dict()):

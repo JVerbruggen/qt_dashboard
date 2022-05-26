@@ -1,6 +1,6 @@
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
-from configuration.demo_gauge_config import DemoGaugeConfig
+from configuration.demo_dashboard_config import DemoDashboardConfig
 from configuration.factory.demo_factory import DemoFactory
 
 WINDOW = (1600, 900)
