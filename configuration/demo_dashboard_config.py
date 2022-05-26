@@ -41,7 +41,11 @@ class DemoDashboardConfig(DashboardConfig):
 
         variable_blinker = IntervalOnOffVariable(500)
 
+        tempvariable_battery = SimpleRangeVariable(0, 0, 255)
+
+
         self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
+        self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
         self.supervisor.start()
 
         return [

@@ -10,7 +10,7 @@ class DemoSetup(Setup):
     """
 
     def create(self):
-        readable = TestOnInterval()
+        readable = TestOnInterval(interval=0.3, policy={"0x18": TestOnInterval.random_first_byte, "0x687": TestOnInterval.random_first_byte})
         supervisor = SimpleComSupervisor(readable)
         config = DemoDashboardConfig(supervisor=supervisor)
 
