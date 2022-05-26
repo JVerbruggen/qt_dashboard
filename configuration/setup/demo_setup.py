@@ -1,6 +1,6 @@
 from configuration.demo_dashboard_config import DemoDashboardConfig
 from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
-from utils.com_supervisor.readable.test_interval import TestOnInterval
+from utils.com_supervisor.readable.mock import Mock
 from configuration.setup.setup import Setup
 
 class DemoSetup(Setup):
@@ -10,7 +10,10 @@ class DemoSetup(Setup):
     """
 
     def create(self):
-        readable = TestOnInterval(interval=0.3, policy={"0x18": TestOnInterval.random_first_byte, "0x687": TestOnInterval.random_first_byte})
+        readable = Mock(interval=0.3, policy={
+            "0x18": Mock.random_first_byte,
+            "0x687": Mock.all_random_bytes
+        })
         supervisor = SimpleComSupervisor(readable)
         config = DemoDashboardConfig(supervisor=supervisor)
 

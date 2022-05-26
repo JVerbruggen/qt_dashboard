@@ -3,9 +3,9 @@ import time
 from typing import Callable
 import random
 
-class TestOnInterval(Readable):
+class Mock(Readable):
     """
-    Serial mocker.
+    Mocker readable.
     Waits for given interval and sends back a message of a random identifier and some data provided by a function.
     Identifiers to pick from are given in the policy. The function that is called should return 8 bytes of data in string format.
     """
@@ -18,8 +18,11 @@ class TestOnInterval(Readable):
     def read(self):
         time.sleep(self.interval)
         identifier, function = random.choice(list(self.policy.items()))
+        value = function()
 
-        data = "{\"identifier\":\"" + identifier + "\",\"value\":\"" + function() + "\"}"
+        print(value)
+
+        data = "{\"identifier\":\"" + identifier + "\",\"value\":\"" + value + "\"}"
         return data.encode(self.encoding)
 
     def __enter__(self):
@@ -29,4 +32,7 @@ class TestOnInterval(Readable):
         pass
 
     def random_first_byte():
-        return str(hex(random.randint(0, 255)))[2:4].upper() + " 00 00 00 00 00 00 00"
+        return "{:04}".format(hex(random.randint(0, 255)))[2:4].upper() + " 00 00 00 00 00 00 00"
+
+    def all_random_bytes():
+        return " ".join("{:04}".format(hex(random.randint(0, 255)))[2:4].upper() for _ in range(8))
