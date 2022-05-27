@@ -5,11 +5,16 @@ from PySide6 import QtGui
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
+from components.drawable.notificationbox import NotificationBox
+from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
+
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
+from components.variable.notification import NotificationList
+
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
+from utils.colors import Colors
 
 class DemoDashboardConfig(DashboardConfig):
     """
@@ -46,6 +51,7 @@ class DemoDashboardConfig(DashboardConfig):
         variable_on = SimpleVariable(1)
         variable_onoff_2000 = IntervalOnOffVariable(2000)
         
+        notification_list = NotificationList()
 
         self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
@@ -73,7 +79,9 @@ class DemoDashboardConfig(DashboardConfig):
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
-            SvgIndicator("assets/left-arrow.svg", variable_on, SvgIndicator.GREEN, 150, 150, 100),
-            SvgBlinker("assets/right-arrow.svg", variable_on, SvgIndicator.ORANGE, 150, 350, 100, 20),
-            SvgBlinker("assets/right-arrow.svg", variable_onoff_2000, SvgIndicator.RED, 150, 550, 100, 20),
+            SvgIndicator("assets/left-arrow.svg", variable_on, 150, 150, 100, Colors.GREEN),
+            SvgBlinker("assets/right-arrow.svg", variable_on, 150, 350, 100, 20, Colors.ORANGE),
+            SvgBlinker("assets/right-arrow.svg", variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
+
+            NotificationBox(notification_list, window_width-270, 100, 250, 400, 50)
         ]

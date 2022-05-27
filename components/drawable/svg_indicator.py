@@ -2,20 +2,14 @@ from components.drawable.drawable import Drawable
 from PySide6 import QtGui
 
 from components.variable.watchable_variable import WatchableVariable
-
+from utils.colors import Colors
 
 class SvgIndicator(Drawable):
     """
     An indicater depicted by a SVG icon that listens to a variable and displays its value (on or off).
     """
-
-    BLACK = QtGui.QColor.fromRgb(0, 0, 0, 255)
-    RED = QtGui.QColor.fromRgb(232, 38, 49, 255)
-    GREEN = QtGui.QColor.fromRgb(151, 191, 78, 255)
-    ORANGE = QtGui.QColor.fromRgb(255, 193, 14, 255)
-
-    def __init__(self, svg_filepath, watchable_variable: WatchableVariable, on_color: QtGui.QColor, x: int, y: int,
-                 size: int):
+    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, 
+            on_color: QtGui.QColor = Colors.GREEN):
         self.svg_filepath = svg_filepath
         self.watchable_variable = watchable_variable
         self.on_color = on_color
@@ -38,7 +32,7 @@ class SvgIndicator(Drawable):
         qp = QtGui.QPainter(self.img)
         qp.setCompositionMode(QtGui.QPainter.CompositionMode_SourceIn)
 
-        qp.fillRect(self.img.rect(), self.on_color if new_state else SvgIndicator.BLACK)
+        qp.fillRect(self.img.rect(), self.on_color if new_state else Colors.BLACK)
 
         qp.end()
 
@@ -57,9 +51,9 @@ class SvgBlinker(SvgIndicator):
     Blinks if value is 1, goes to off color if 0
     """
 
-    def __init__(self, svg_filepath, watchable_variable: WatchableVariable, on_color: QtGui.QColor, x: int, y: int,
-            size: int, interval: int):
-        super().__init__(svg_filepath, watchable_variable, on_color, x, y, size)
+    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, interval: int=30,
+            on_color: QtGui.QColor = Colors.GREEN):
+        super().__init__(svg_filepath, watchable_variable, x, y, size, on_color)
 
         self.interval_state = interval
         self.interval = interval
