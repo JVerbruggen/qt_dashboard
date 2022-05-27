@@ -15,6 +15,7 @@ from components.variable.notification import NotificationList, Notification, Not
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 from utils.colors import Colors
+from utils.icons import Icons
 
 class DemoDashboardConfig(DashboardConfig):
     """
@@ -54,7 +55,7 @@ class DemoDashboardConfig(DashboardConfig):
         notification_list = NotificationList(notifications=
             [
                 Notification("This is a warning", NotificationStyles.WARNING()),
-                Notification("This is also a warning", NotificationStyles.WARNING()),
+                Notification("This is also a warning", NotificationStyles.WARNING_BATTERY()),
             ])
 
         self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
@@ -83,9 +84,9 @@ class DemoDashboardConfig(DashboardConfig):
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
-            SvgIndicator("assets/left-arrow.svg", variable_on, 150, 150, 100, Colors.GREEN),
-            SvgBlinker("assets/right-arrow.svg", variable_on, 150, 350, 100, 20, Colors.ORANGE),
-            SvgBlinker("assets/right-arrow.svg", variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
+            SvgIndicator(Icons.LEFT_ARROW, variable_on, 150, 150, 100, Colors.GREEN),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 
             NotificationBox(notification_list, window_width-270, 100, 250, 400, 50)
         ]
