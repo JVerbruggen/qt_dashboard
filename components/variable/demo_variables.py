@@ -66,7 +66,7 @@ class IntervalOnOffVariable(WatchableVariable):
 
     def __init__(self, interval):
         self.interval = interval
-        self.value = 0
+        self.value = 1
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(interval)

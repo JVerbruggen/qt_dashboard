@@ -7,7 +7,7 @@ from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.drawable.blinker import SvgIndicator
+from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 
@@ -42,11 +42,14 @@ class DemoDashboardConfig(DashboardConfig):
         variable_blinker = IntervalOnOffVariable(500)
 
         tempvariable_battery = SimpleRangeVariable(0, 0, 255)
-
+        variable_off = SimpleVariable(0)
+        variable_on = SimpleVariable(1)
+        variable_onoff_2000 = IntervalOnOffVariable(2000)
+        
 
         self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
-        self.supervisor.start()
+        # self.supervisor.start()
 
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
@@ -70,6 +73,7 @@ class DemoDashboardConfig(DashboardConfig):
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
-            SvgIndicator("assets/left-arrow.svg", variable_blinker, QtGui.QColor.fromRgb(41, 110, 1), 150, 150, 100),
-            SvgIndicator("assets/right-arrow.svg", variable_blinker, QtGui.QColor.fromRgb(41, 110, 1), 150, 350, 100),
+            SvgIndicator("assets/left-arrow.svg", variable_on, SvgIndicator.GREEN, 150, 150, 100),
+            SvgBlinker("assets/right-arrow.svg", variable_on, SvgIndicator.ORANGE, 150, 350, 100, 20),
+            SvgBlinker("assets/right-arrow.svg", variable_onoff_2000, SvgIndicator.RED, 150, 550, 100, 20),
         ]
