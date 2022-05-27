@@ -10,7 +10,7 @@ from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import NotificationList
+from components.variable.notification import NotificationList, Notification, NotificationStyles
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
@@ -51,7 +51,11 @@ class DemoDashboardConfig(DashboardConfig):
         variable_on = SimpleVariable(1)
         variable_onoff_2000 = IntervalOnOffVariable(2000)
         
-        notification_list = NotificationList()
+        notification_list = NotificationList(notifications=
+            [
+                Notification("This is a warning", NotificationStyles.WARNING()),
+                Notification("This is also a warning", NotificationStyles.WARNING()),
+            ])
 
         self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status

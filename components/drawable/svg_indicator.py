@@ -3,6 +3,7 @@ from PySide6 import QtGui
 
 from components.variable.watchable_variable import WatchableVariable
 from utils.colors import Colors
+import utils.drawing
 
 class SvgIndicator(Drawable):
     """
@@ -19,22 +20,13 @@ class SvgIndicator(Drawable):
         self.old_state = -1
 
         self.img = QtGui.QPixmap(self.svg_filepath)
-        qp = QtGui.QPainter(self.img)
-        qp.setCompositionMode(QtGui.QPainter.CompositionMode_SourceIn)
-        qp.fillRect(self.img.rect(), on_color)
-        qp.end()
+        utils.drawing.fill_svg(self.img, self.on_color)
 
         self.blink_state = False
 
     def set_color(self, new_state: int):
         self.blink_state = not self.blink_state
-
-        qp = QtGui.QPainter(self.img)
-        qp.setCompositionMode(QtGui.QPainter.CompositionMode_SourceIn)
-
-        qp.fillRect(self.img.rect(), self.on_color if new_state else Colors.BLACK)
-
-        qp.end()
+        utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
 
     def draw(self, painter: QtGui.QPainter):
         current_state = self.watchable_variable.get_value()

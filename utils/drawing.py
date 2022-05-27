@@ -4,8 +4,18 @@ from PySide6 import QtCore, QtGui
 Drawing tools that weren't as easy with the default QT library
 """
 
-DEFAULT_LINE_WIDTH = 1
+DEFAULT_LINE_WIDTH = 2
 DEFAULT_ROUNDED_WIDTH = 7
+FONT_FAMILY = "Times"
+FONT_MD = QtGui.QFont(FONT_FAMILY, 13)
+FONT_SM = QtGui.QFont(FONT_FAMILY, 12)
+
+def default_line_pen(color: QtGui.QColor = QtGui.QColor.fromRgb(200,200,200)):
+    pen = QtGui.QPen(color)
+    pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
+    pen.setColor(color)
+    pen.setWidth(DEFAULT_LINE_WIDTH)
+    return pen
 
 def draw_rounded_line(painter: QtGui.QPainter, from_point: QtCore.QPoint, to_point: QtCore.QPoint, width: int = None):
     """
@@ -35,18 +45,19 @@ def draw_arc(painter: QtGui.QPainter, cx: int, cy: int, rad: int, start_deg: int
 
 def draw_box(painter: QtGui.QPainter, x: int, y: int, w: int, h: int):
     """
-    Draws a part circle
+    Draws a rounded box
     """
-    pen = QtGui.QPen(QtGui.Qt.white)
-    pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
-    pen.setColor(QtGui.qRgb(200, 200, 200))
-    pen.setWidth(DEFAULT_LINE_WIDTH)
-    painter.setPen(pen)
     painter.drawRoundedRect(x, y, w, h, DEFAULT_ROUNDED_WIDTH, DEFAULT_ROUNDED_WIDTH)
 
-def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = None):
+def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = FONT_MD):
     """
     Draw text at given position and size
     """
-    if font: painter.setFont(font)
+    painter.setFont(font)
     painter.drawText(x, y, w, h, 0x0004, text)
+
+def fill_svg(img: QtGui.QPixmap, color: QtGui.QColor):
+    qp = QtGui.QPainter(img)
+    qp.setCompositionMode(QtGui.QPainter.CompositionMode_SourceIn)
+    qp.fillRect(img.rect(), color)
+    qp.end()
