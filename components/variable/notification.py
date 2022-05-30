@@ -32,7 +32,7 @@ class NotificationStyle:
     ICON_SIZE = 30
     ICON_MARGIN = 10
     TEXT_HMARGIN = 10
-    TEXT_VMARGIN = 10
+    TEXT_VMARGIN = 17
 
     def __init__(self, icon:str = Icons.UNKNOWN, color:QtGui.QColor = Colors.BLACK):
         self.icon_img = QtGui.QPixmap(icon)
@@ -40,9 +40,12 @@ class NotificationStyle:
 
     def draw(self, text: str, painter: QtGui.QPainter, x, y, w, h):
         painter.setPen(utils.drawing.default_line_pen(self.color))
-        utils.drawing.draw_box(painter, x, y, w, h)
+        self._draw_box(painter, x, y, w, h)
         self._draw_icon(painter, x, y)
         self._draw_text(text, painter, x, y, w, h)
+
+    def _draw_box(self, painter, x, y, w, h):
+        utils.drawing.draw_box(painter, x, y, w, h)
 
     def _draw_text(self, text, painter: QtGui.QPainter, x, y, w, h):
         utils.drawing.draw_text_at(painter, 
