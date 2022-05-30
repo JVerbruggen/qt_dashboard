@@ -66,7 +66,9 @@ class SvgBlinker(SvgIndicator):
 
             self.update_interval()
             
-        elif self.blinking: self.blinking = False
+        elif self.blinking: 
+            self.blinking = False
+            self.blink_phase = False
 
         blink_state = int(self.blink_phase)
         super().set_color(blink_state)
