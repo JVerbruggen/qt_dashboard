@@ -58,20 +58,8 @@ class NotificationStyle:
         painter.drawPixmap(x+NotificationStyle.ICON_MARGIN, y+NotificationStyle.ICON_MARGIN, 
             NotificationStyle.ICON_SIZE, NotificationStyle.ICON_SIZE, self.icon_img)
 
-class ErrorNotification(NotificationStyle):
-    def __init__(self, icon=Icons.WARNING):
-        super().__init__(icon, Colors.RED)
-
-class WarningNotification(NotificationStyle):
-    def __init__(self, icon=Icons.WARNING):
-        super().__init__(icon, Colors.ORANGE)
-
-class CrucialNotification(NotificationStyle):
-    def __init__(self, icon=Icons.WARNING):
-        super().__init__(icon, Colors.RED)
-
 class NotificationStyles:
-    ERROR = lambda : ErrorNotification()
-    WARNING = lambda : WarningNotification()
-    WARNING_BATTERY = lambda : WarningNotification(Icons.BATTERY)
-    CRUCIAL = lambda : CrucialNotification()
+    ERROR = lambda : NotificationStyle(Icons.WARNING, Colors.RED)
+    WARNING = lambda : NotificationStyle(Icons.WARNING, Colors.ORANGE)
+    WARNING_BATTERY = lambda : NotificationStyle(Icons.BATTERY, Colors.ORANGE)
+    CRUCIAL = lambda : NotificationStyle(Icons.WARNING, Colors.RED)
