@@ -4,10 +4,19 @@ from utils.colors import Colors
 from utils.icons import Icons
 from PySide6 import QtGui
 
-@dataclass
 class NotificationList:
+    """Interface of list with notifications"""
+
+    def get_all(self) -> list["Notification"]:
+        raise NotImplementedError()
+
+@dataclass
+class StaticNotificationList(NotificationList):
     """State of current notifications, used as reference"""
     notifications: list["Notification"] = field(default_factory=list)
+
+    def get_all(self):
+        return self.notifications
 
 @dataclass
 class Notification:
@@ -30,7 +39,10 @@ class NotificationStyle:
         self.color = color
 
     def draw(self, text: str, painter: QtGui.QPainter, x, y, w, h):
-        raise NotImplementedError() 
+        painter.setPen(utils.drawing.default_line_pen(self.color))
+        utils.drawing.draw_box(painter, x, y, w, h)
+        self._draw_icon(painter, x, y)
+        self._draw_text(text, painter, x, y, w, h)
 
     def _draw_text(self, text, painter: QtGui.QPainter, x, y, w, h):
         utils.drawing.draw_text_at(painter, 
@@ -47,24 +59,16 @@ class NotificationStyle:
             NotificationStyle.ICON_SIZE, NotificationStyle.ICON_SIZE, self.icon_img)
 
 class ErrorNotification(NotificationStyle):
-    def draw(self, text: str, painter: QtGui.QPainter, x, y, w, h):
-        raise NotImplementedError() 
+    def __init__(self, icon=Icons.WARNING):
+        super().__init__(icon, Colors.RED)
 
 class WarningNotification(NotificationStyle):
     def __init__(self, icon=Icons.WARNING):
         super().__init__(icon, Colors.ORANGE)
 
-    def draw(self, text: str, painter: QtGui.QPainter, x, y, w, h):
-        painter.setPen(utils.drawing.default_line_pen(self.color))
-        utils.drawing.draw_box(painter, x, y, w, h)
-
-        super()._draw_icon(painter, x, y)
-        super()._draw_text(text, painter, x, y, w, h)
-
-
 class CrucialNotification(NotificationStyle):
-    def draw(self, text: str, painter: QtGui.QPainter, x, y, w, h):
-        raise NotImplementedError() 
+    def __init__(self, icon=Icons.WARNING):
+        super().__init__(icon, Colors.RED)
 
 class NotificationStyles:
     ERROR = lambda : ErrorNotification()
