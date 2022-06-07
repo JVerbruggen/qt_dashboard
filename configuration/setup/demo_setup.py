@@ -12,9 +12,10 @@ class DemoSetup(Setup):
 
     def create(self):
         readable = Mock(interval=0.3, policy={
-            "0x18": Mock.random_first_byte,
-            "0x687": Mock.all_random_bytes,
-            "0x69": partial(Mock.take_from, ["00 00 00 00 00 00 00 00", "01 00 00 00 00 00 00 00"])
+            # "0x18": Mock.random_first_byte,
+            # "0x687": Mock.all_random_bytes,
+            # "0x69": partial(Mock.take_from, ["00 00 00 00 00 00 00 00", "01 00 00 00 00 00 00 00"]),
+            "0x420": partial(Mock.increment, 1),
         })
         supervisor = SimpleComSupervisor(readable)
         config = DemoDashboardConfig(supervisor=supervisor)

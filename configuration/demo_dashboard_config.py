@@ -12,6 +12,7 @@ from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
 from components.variable.notification import StaticNotificationList, Notification, NotificationStyles
 from components.variable.proxy_variable import *
+from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
 
 from components.variable.processor.little_endian_processor import LittleEndianProcessor
@@ -66,9 +67,23 @@ class DemoDashboardConfig(DashboardConfig):
                 Notification("This is also a warning", NotificationStyles.CRUCIAL()),
             ])
 
+        proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
+        proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
+        proxy_cont_tx_status = ProxyVariable({
+                0: None,
+                1: proxy_cont_tx_status_stat,
+                2: None,
+                3: None,
+                4: None,
+                5: None,
+                6: None,
+                7: None,
+            })
+
         # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
-        self.supervisor.register('0x69', proxy_variable, ByteMapper())
+        # self.supervisor.register('0x69', proxy_variable, ByteMapper())
+        self.supervisor.register('0x420', proxy_cont_tx_status, ByteMapper())
         self.supervisor.start()
 
         return [
@@ -96,6 +111,15 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.LEFT_ARROW, proxied_variable, 150, 150, 100, Colors.GREEN),
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
             SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
+
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[7], window_width - 100, 300, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[6], window_width - 100, 350, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[5], window_width - 100, 400, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[4], window_width - 100, 450, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[3], window_width - 100, 500, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[2], window_width - 100, 550, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
+            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
             NotificationBox(notification_list, window_width-270, 100, 250, 400, 50)
         ]

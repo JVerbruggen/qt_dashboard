@@ -2,6 +2,7 @@ from utils.com_supervisor.readable.readable import Readable
 import time
 from typing import Callable
 import random
+from utils.bytes import *
 
 class Mock(Readable):
     """
@@ -20,6 +21,7 @@ class Mock(Readable):
         identifier, function = random.choice(list(self.policy.items()))
         value = function()
 
+        print("\n--- INCOMING ---")
         print(value)
 
         data = "{\"identifier\":\"" + identifier + "\",\"value\":\"" + value + "\"}"
@@ -39,3 +41,10 @@ class Mock(Readable):
 
     def take_from(items: list[str]):
         return random.choice(items)
+
+    increment_state = {i : 0 for i in range(8)}
+    def increment(index: int):
+        incremented = int_to_byte_str(Mock.increment_state[index])
+        Mock.increment_state[index] = (Mock.increment_state[index] + 1) % 256
+
+        return " ".join(incremented if i == index else "00" for i in range(8))

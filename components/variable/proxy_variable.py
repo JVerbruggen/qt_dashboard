@@ -13,7 +13,7 @@ class ProxyVariable(WatchableVariable):
         self.configuration = configuration
 
     def get_value(self):
-        raise NotImplementedError()
+        raise NotImplementedError("Not supported")
 
     def set_value(self, value: bytes):
         """ Value is 8 bytes """
@@ -22,6 +22,7 @@ class ProxyVariable(WatchableVariable):
         for (i, byte) in enumerate(byte_array):
             if i not in self.configuration: continue
             variable = self.configuration[i]
+            if variable is None: continue
             variable.set_value(byte)
 
         
