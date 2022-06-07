@@ -36,3 +36,6 @@ class Mock(Readable):
 
     def all_random_bytes():
         return " ".join("{:04}".format(hex(random.randint(0, 255)))[2:4].upper() for _ in range(8))
+
+    def take_from(items: list[str]):
+        return random.choice(items)

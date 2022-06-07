@@ -5,5 +5,5 @@ class Mapper:
     Interface for rawvalue-to-variable mapping strategies
     """
 
-    def map_to(self, value, variable: WatchableVariable):
+    def map_to(self, value: bytes, variable: WatchableVariable):
         raise NotImplementedError()

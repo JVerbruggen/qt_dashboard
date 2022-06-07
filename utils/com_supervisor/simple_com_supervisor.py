@@ -29,8 +29,9 @@ class SimpleComSupervisor(ComSupervisor):
         try:
             thread.start()
         except (KeyboardInterrupt):
-            stop.set()
             sys.exit()
+        except (SystemExit):
+            stop.set()
 
     def __update_variable(self, identifier, value):
         if identifier not in self.mappings: return
@@ -41,9 +42,16 @@ class SimpleComSupervisor(ComSupervisor):
     def __loop(self, stop_event: Event):
         with self.readable as r:
             while not stop_event.is_set():
-                raw = r.read().decode(self.ENCODING)
+                raw_encoded = r.read()
+                raw = raw_encoded.decode(self.ENCODING)
                 if len(raw) == 0: continue
                 data = json.loads(raw) # TODO: Should be unnecessary
-                self.__update_variable(data["identifier"], data["value"])
+
+                identifier = data["identifier"]
+                value = data["value"]
+
+                by = bytes(value, self.ENCODING)
+
+                self.__update_variable(identifier, by)
 
 
