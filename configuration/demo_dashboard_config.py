@@ -69,7 +69,9 @@ class DemoDashboardConfig(DashboardConfig):
 
         proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
         proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
-        proxy_cont_tx_status = ProxyVariable({
+
+        proxy = ProxyVariableWithState(state_byte_index=0, states={
+            b'01': ProxyVariable({
                 0: None,
                 1: proxy_cont_tx_status_stat,
                 2: None,
@@ -78,12 +80,13 @@ class DemoDashboardConfig(DashboardConfig):
                 5: None,
                 6: None,
                 7: None,
-            })
+            }),
+        })
 
         # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
         # self.supervisor.register('0x69', proxy_variable, ByteMapper())
-        self.supervisor.register('0x420', proxy_cont_tx_status, ByteMapper())
+        self.supervisor.register('0x420', proxy, ByteMapper())
         self.supervisor.start()
 
         return [

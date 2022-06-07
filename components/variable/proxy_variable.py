@@ -1,16 +1,13 @@
 from components.variable.watchable_variable import WatchableVariable
+from dataclasses import dataclass
 
+@dataclass(slots=True)
 class ProxyVariable(WatchableVariable):
     """
     A variable that proxies assigned value to 8 underlying variables.
     Uses a byte configuration to determine which variable should be used.
     """
-
-    __slots__ = \
-        "configuration"
-
-    def __init__(self, configuration: dict[int, WatchableVariable] = []):
-        self.configuration = configuration
+    configuration: dict[int, WatchableVariable]
 
     def get_value(self):
         raise NotImplementedError("Not supported")
@@ -25,5 +22,20 @@ class ProxyVariable(WatchableVariable):
             if variable is None: continue
             variable.set_value(byte)
 
-        
+@dataclass(slots=True)
+class ProxyVariableWithState(WatchableVariable):
+    state_byte_index: int
+    states: dict[int, WatchableVariable]
 
+    def get_value(self):
+        raise NotImplementedError("Not supported")
+
+    def set_value(self, value: bytes):
+        """ Value is 8 bytes """
+        byte_array = value.split()
+        state = byte_array[self.state_byte_index]
+
+        if state not in self.states: return
+        
+        selected_proxy = self.states[state]
+        selected_proxy.set_value(value)
