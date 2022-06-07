@@ -71,7 +71,7 @@ class DemoDashboardConfig(DashboardConfig):
         proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
 
         proxy = ProxyVariableWithState(state_byte_index=0, states={
-            b'01': ProxyVariable({
+            b'00': ProxyVariable({
                 0: None,
                 1: proxy_cont_tx_status_stat,
                 2: None,
