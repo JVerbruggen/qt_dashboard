@@ -1,5 +1,8 @@
 from utils.drawing import *
+from utils.colors import Colors
 from dataclasses import dataclass
+
+BUTTON_BORDER_WIDTH = 2
 
 @dataclass
 class PageSelectorButton:
@@ -10,10 +13,13 @@ class PageSelectorButton:
     w: int = 100
     h: int = 100
 
-    def draw(self, painter):
+    def draw(self, painter, selected: bool):
+        if selected:
+            draw_box_filled(painter, self.x, self.y, self.w, self.h, Colors.BUTTON_SELECTED, BUTTON_BORDER_WIDTH)
+        else: draw_box_filled(painter, self.x, self.y, self.w, self.h, Colors.BUTTON_UNSELECTED, BUTTON_BORDER_WIDTH)
+
         painter.setPen(default_line_pen())
-        draw_box(painter, self.x, self.y, self.w, self.h)
-        draw_text_at(painter, self.x+self.w/4, self.y+self.w/4, self.w/2, self.h/2, self.text)
+        draw_text_at(painter, self.x, self.y+self.h/2, self.w, self.h, self.text)
     
     def hits(self, x, y) -> bool:
         return x >= self.x \
@@ -24,10 +30,14 @@ class PageSelectorButton:
 class PageSelector:
     def __init__(self, buttons):
         self.buttons = buttons
+        self.selected_iden = None
+
+    def set_selected(self, iden:str):
+        self.selected_iden = iden
 
     def draw(self, painter):
         for button in self.buttons:
-            button.draw(painter)
+            button.draw(painter, self.selected_iden == button.iden)
 
     def hits(self, x, y) -> PageSelectorButton:
         for button in self.buttons:

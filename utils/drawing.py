@@ -10,11 +10,11 @@ FONT_FAMILY = "Times"
 FONT_MD = QtGui.QFont(FONT_FAMILY, 13)
 FONT_SM = QtGui.QFont(FONT_FAMILY, 12)
 
-def default_line_pen(color: QtGui.QColor = QtGui.QColor.fromRgb(200,200,200)):
+def default_line_pen(color: QtGui.QColor = QtGui.QColor.fromRgb(200,200,200), width: int=DEFAULT_LINE_WIDTH):
     pen = QtGui.QPen(color)
     pen.setCapStyle(QtCore.Qt.PenCapStyle.RoundCap)
     pen.setColor(color)
-    pen.setWidth(DEFAULT_LINE_WIDTH)
+    pen.setWidth(width)
     return pen
 
 def draw_rounded_line(painter: QtGui.QPainter, from_point: QtCore.QPoint, to_point: QtCore.QPoint, width: int = None):
@@ -48,6 +48,22 @@ def draw_box(painter: QtGui.QPainter, x: int, y: int, w: int, h: int):
     Draws a rounded box
     """
     painter.drawRoundedRect(x, y, w, h, DEFAULT_ROUNDED_WIDTH, DEFAULT_ROUNDED_WIDTH)
+
+def draw_box_filled(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, color: QtGui.QColor, width: int=DEFAULT_LINE_WIDTH):
+    """
+    Draws a filled rounded box
+    """
+    path = QtGui.QPainterPath()
+    path.addRoundedRect(x, y, w, h, DEFAULT_ROUNDED_WIDTH, DEFAULT_ROUNDED_WIDTH)
+
+    painter.fillPath(path, color)
+
+    painter.setPen(default_line_pen(width=width))
+    painter.drawPath(path)
+
+    # painter.drawRoundedRect(x, y, w, h, DEFAULT_ROUNDED_WIDTH, DEFAULT_ROUNDED_WIDTH)
+    # painter.fillRect(x,y,w,h,QtGui.Qt.white)
+
 
 def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = FONT_MD):
     """
