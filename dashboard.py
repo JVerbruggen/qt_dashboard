@@ -4,6 +4,7 @@ from configuration.dashboard_config import DashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
 from dataclasses import dataclass
+from utils.painter.qtpainter import HMIQtPainter
 
 WINDOW = (1600, 900)
 FPS = 60
@@ -35,9 +36,10 @@ class Dashboard(QtWidgets.QWidget):
 
     def paintEvent(self, event):
         qp = QtGui.QPainter(self)
+        painter = HMIQtPainter(qp)
 
         for drawable in self.configuration.get_drawables():
-            drawable.draw(qp)
+            drawable.draw(painter)
 
         qp.end()
 

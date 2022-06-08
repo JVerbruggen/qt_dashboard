@@ -1,6 +1,6 @@
-from utils.drawing import *
 from utils.colors import Colors
 from dataclasses import dataclass
+from utils.painter.painter import Painter
 
 BUTTON_BORDER_WIDTH = 2
 
@@ -13,13 +13,12 @@ class PageSelectorButton:
     w: int = 100
     h: int = 100
 
-    def draw(self, painter, selected: bool):
+    def draw(self, painter: Painter, selected: bool):
         if selected:
-            draw_box_filled(painter, self.x, self.y, self.w, self.h, Colors.BUTTON_SELECTED, BUTTON_BORDER_WIDTH)
-        else: draw_box_filled(painter, self.x, self.y, self.w, self.h, Colors.BUTTON_UNSELECTED, BUTTON_BORDER_WIDTH)
+            painter.draw_box_filled(self.x, self.y, self.w, self.h, Colors.BUTTON_SELECTED, BUTTON_BORDER_WIDTH)
+        else: painter.draw_box_filled(self.x, self.y, self.w, self.h, Colors.BUTTON_UNSELECTED, BUTTON_BORDER_WIDTH)
 
-        painter.setPen(default_line_pen())
-        draw_text_at(painter, self.x, self.y+self.h/2, self.w, self.h, self.text)
+        painter.draw_text_at(self.x, self.y+self.h/2, self.w, self.h, Colors.DEFAULT_LINE, self.text)
     
     def hits(self, x, y) -> bool:
         return x >= self.x \
@@ -35,7 +34,7 @@ class PageSelector:
     def set_selected(self, iden:str):
         self.selected_iden = iden
 
-    def draw(self, painter):
+    def draw(self, painter: Painter):
         for button in self.buttons:
             button.draw(painter, self.selected_iden == button.iden)
 
