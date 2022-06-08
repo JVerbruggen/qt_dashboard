@@ -1,4 +1,6 @@
+import PySide6
 from PySide6 import QtCore, QtGui
+from PySide6.QtGui import QColor
 
 """
 Drawing tools that weren't as easy with the default QT library
@@ -48,6 +50,19 @@ def draw_box(painter: QtGui.QPainter, x: int, y: int, w: int, h: int):
     Draws a rounded box
     """
     painter.drawRoundedRect(x, y, w, h, DEFAULT_ROUNDED_WIDTH, DEFAULT_ROUNDED_WIDTH)
+
+def draw_rect(painter: QtGui.QPainter, cx: int, cy: int, width: int, height: int):
+    """
+    Draws a square
+    """
+    painter.setBrush(QColor(255, 255, 255))
+
+    pen = QtGui.QPen(QtGui.Qt.white)
+    pen.setColor(QtGui.qRgb(200, 200, 200))
+    pen.setWidth(3)
+    painter.setPen(pen)
+
+    painter.drawRoundedRect(cx, cy, width, height, 10, 10)
 
 def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = FONT_MD):
     """

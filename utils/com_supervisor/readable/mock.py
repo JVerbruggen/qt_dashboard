@@ -1,6 +1,6 @@
 from utils.com_supervisor.readable.readable import Readable
 import time
-from typing import Callable
+from typing import Callable, Dict
 import random
 from utils.bytes import *
 
@@ -11,7 +11,7 @@ class Mock(Readable):
     Identifiers to pick from are given in the policy. The function that is called should return 8 bytes of data in string format.
     """
 
-    def __init__(self, interval: float=1.0, encoding: str = "utf-8", policy: dict[str, Callable[[], str]] = dict()):
+    def __init__(self, interval: float=1.0, encoding: str = "utf-8", policy: Dict[str, Callable[[], str]] = dict()):
         self.interval = interval
         self.encoding = encoding
         self.policy = policy

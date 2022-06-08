@@ -2,6 +2,7 @@ from typing import List
 
 from PySide6 import QtGui
 
+from components.drawable.bar_display import BarDisplay
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
@@ -40,6 +41,9 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
+    BAR_OFFX = 500
+    BAR_OFFy = 300
+
     def __init__(self, supervisor: ComSupervisor):	
         self.supervisor = supervisor
 
@@ -50,6 +54,7 @@ class DemoDashboardConfig(DashboardConfig):
         variable_dummy = SimpleRangeVariable(40, 0, 100)
         variable_motorspeed = DemoLoopingVariable(0, 0, 60)
         variable_temp = DemoLoopingVariable(50, 50, 240)
+        variable_bar = DemoLoopingVariable(50, 50, 240)
 
         variable_blinker = IntervalOnOffVariable(500)
 
@@ -124,5 +129,7 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
-            NotificationBox(notification_list, window_width-270, 100, 250, 400, 50)
+            NotificationBox(notification_list, window_width-270, 100, 250, 400, 50),
+
+            BarDisplay(variable_bar, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200)
         ]
