@@ -1,6 +1,6 @@
 import sys
 from PySide6 import QtCore, QtWidgets, QtGui
-from configuration.demo_dashboard_config import DemoDashboardConfig
+from configuration.dashboard_config import DashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
 from dataclasses import dataclass
@@ -19,7 +19,7 @@ class Dashboard(QtWidgets.QWidget):
     Extends QWidget, where paintEvent is called by QT to update the widget.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration: DashboardConfig):
         super().__init__()
         self.configuration = configuration
         self.layout = QtWidgets.QVBoxLayout(self)
