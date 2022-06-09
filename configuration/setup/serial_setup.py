@@ -2,6 +2,7 @@ from configuration.demo_dashboard_config import DemoDashboardConfig
 from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
 from utils.com_supervisor.readable.serial import SerialReadable
 from configuration.setup.setup import Setup
+from utils.context.context import Context
 
 class SerialSetup(Setup):
     """
@@ -11,9 +12,18 @@ class SerialSetup(Setup):
     BAUD = 115200
     SERIAL_DEVICE = "COM3"
 
-    def create(self):
+    def create(self, context: Context, window):
         readable = SerialReadable(self.SERIAL_DEVICE, self.BAUD)
         supervisor = SimpleComSupervisor(readable)
-        config = DemoDashboardConfig(supervisor=supervisor)
+
+        environment={
+            NOTIFICATION_KEY: StaticNotificationList(notifications=
+            [
+                Notification("This is a warning", NotificationStyles.WARNING()),
+                Notification("This is also a warning", NotificationStyles.CRUCIAL()),
+            ]),
+        }
+
+        config = DemoDashboardConfig(supervisor=supervisor, context=context, window=window, environment=environment)
 
         return config

@@ -3,8 +3,10 @@ from PySide6 import QtCore, QtWidgets, QtGui
 from configuration.dashboard_config import DashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
+from configuration.setup.setup import Setup
 from dataclasses import dataclass
 from utils.painter.qtpainter import HMIQtPainter
+from utils.context.qt_context import HMIQtContext
 
 WINDOW = (1600, 900)
 FPS = 60
@@ -47,12 +49,17 @@ class Dashboard(QtWidgets.QWidget):
         pos = event.pos()
         self.configuration.click_event(pos.x(), pos.y())
 
+def get_setup() -> Setup:
+    return DemoSetup()
+    # return SerialSetup()
+
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    setup = DemoSetup()
-    # setup = SerialSetup()
-    widget = Dashboard(setup.create(WINDOW))
+    setup = get_setup()
+    context = HMIQtContext()
+
+    widget = Dashboard(setup.create(context, WINDOW))
     widget.setFixedSize(WINDOW[0], WINDOW[1])
     widget.setMouseTracking(True)
     # enable touch controls here

@@ -22,8 +22,9 @@ class SvgIndicator(Drawable):
 
         self.blink_state = False
 
-    def set_color(self, new_state: int):
-        self.blink_state = not self.blink_state
+    def set_color(self, new_state: int, painter: Painter):
+        painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, 
+            self.on_color if new_state else Colors.BLACK)
         # utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
 
     def draw(self, painter: Painter):
@@ -31,13 +32,7 @@ class SvgIndicator(Drawable):
 
         current_state = self.watchable_variable.get_value()
 
-        if current_state != self.old_state:
-            self.set_color(current_state)
-
-        painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, 
-            self.on_color if current_state else Colors.BLACK)
-
-        # painter.drawPixmap(int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, self.img)
+        self.set_color(current_state, painter)
     
     def __init_img(self, painter: Painter):
         """Initializes on the first draw."""
@@ -65,7 +60,7 @@ class SvgBlinker(SvgIndicator):
             self.blink_phase = not self.blink_phase
             self.interval_state = self.interval
 
-    def set_color(self, new_state: int):
+    def set_color(self, new_state: int, painter: Painter):
         if new_state == 1:
             if not self.blinking:
                 self.blinking = True
@@ -78,4 +73,4 @@ class SvgBlinker(SvgIndicator):
             self.blink_phase = False
 
         blink_state = int(self.blink_phase)
-        super().set_color(blink_state)
+        super().set_color(blink_state, painter)

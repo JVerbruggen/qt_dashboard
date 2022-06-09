@@ -1,7 +1,5 @@
 from typing import List
 
-from PySide6 import QtGui
-
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
 from components.drawable.drawable import Drawable
@@ -21,6 +19,7 @@ from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
+from utils.context.context import Context
 from utils.icons import Icons
 
 class DemoDashboardConfig(DashboardConfig):
@@ -44,10 +43,11 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, supervisor: ComSupervisor, window, context: {} = {}):	
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), environment: {} = {}):	
         self.supervisor = supervisor
-        self.context = context
+        self.environment = environment
         self.window = window
+        self.context = context
 
         self.pages = {
             self.PAGE_IDEN_MAIN: self.__page_main(window),
@@ -82,7 +82,7 @@ class DemoDashboardConfig(DashboardConfig):
         notification_height = 70
 
         return [
-            NotificationBox(self.context["notifications"], notification_paddingx, notification_paddingy, 
+            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy, 
                 window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
         ]
 
@@ -91,15 +91,15 @@ class DemoDashboardConfig(DashboardConfig):
 
         variable_speed = SimpleRangeVariable(0, 0, 240)
         variable_dummy = SimpleRangeVariable(40, 0, 100)
-        variable_motorspeed = DemoLoopingVariable(0, 0, 60)
-        variable_temp = DemoLoopingVariable(50, 50, 240)
+        variable_motorspeed = DemoLoopingVariable(self.context, 0, 0, 60)
+        variable_temp = DemoLoopingVariable(self.context, 50, 50, 240)
 
-        variable_blinker = IntervalOnOffVariable(500)
+        variable_blinker = IntervalOnOffVariable(self.context, 500)
 
         tempvariable_battery = SimpleRangeVariable(0, 0, 255)
         variable_off = SimpleVariable(0)
         variable_on = SimpleVariable(1)
-        variable_onoff_2000 = IntervalOnOffVariable(2000)
+        variable_onoff_2000 = IntervalOnOffVariable(self.context, 2000)
 
         proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
         proxy_variable = ProxyVariable({0: proxied_variable})
@@ -130,7 +130,7 @@ class DemoDashboardConfig(DashboardConfig):
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
         # self.supervisor.register('0x69', proxy_variable, ByteMapper())
         self.supervisor.register('0x420', proxy, ByteMapper())
-        self.supervisor.start()
+        # self.supervisor.start()
 
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
@@ -167,5 +167,5 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
-            NotificationBox(self.context["notifications"], window_width-270, 100, 250, 400, 50)
+            NotificationBox(self.environment["notifications"], window_width-270, 100, 250, 400, 50)
         ]
