@@ -46,7 +46,7 @@ class Dashboard(QtWidgets.QWidget):
         qp.end()
 
     def mousePressEvent(self, event:QtGui.QMouseEvent):
-        pos = event.pos()
+        pos = event.position()
         self.configuration.click_event(pos.x(), pos.y())
 
 def get_setup() -> Setup:

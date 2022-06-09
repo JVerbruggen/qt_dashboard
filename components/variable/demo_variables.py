@@ -12,9 +12,8 @@ class DemoLoopingVariable(WatchableRangeVariable):
         self.value = default_value
         self.lower_val = lower_val
         self.upper_val = upper_val
-
-        context.run_timer(self.update, ms)
         self.increment = increment
+        context.run_timer(self.update, ms)
 
     def update(self):
         self.value = ((self.value + self.increment - self.lower_val) % (
