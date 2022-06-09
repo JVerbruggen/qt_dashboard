@@ -104,7 +104,7 @@ class Gauge(Drawable):
         from_y = self.cy
         to_x = math.cos(self.theta) * self.size + self.cx
         to_y = -math.sin(self.theta) * self.size + self.cy
-        draw_rounded_line(painter, QtCore.QPoint(from_x, from_y), QtCore.QPoint(int(to_x), int(to_y)), width=self.ROD_DRAW_WEIGHT)
+        draw_runded_line(painter, QtCore.QPoint(from_x, from_y), QtCore.QPoint(int(to_x), int(to_y)), width=self.ROD_DRAW_WEIGHT)
 
     def __draw_hints(self, painter):
         hintvalues_distance = self.size / 2

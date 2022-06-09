@@ -1,5 +1,9 @@
 import sys
+
+import PySide6
 from PySide6 import QtCore, QtWidgets, QtGui
+from PySide6.QtGui import QScreen
+
 from configuration.demo_dashboard_config import DemoDashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
@@ -47,5 +51,6 @@ if __name__ == "__main__":
     widget = Dashboard(setup.create())
     widget.setFixedSize(WINDOW[0], WINDOW[1])
     widget.show()
+    widget.setGeometry(app.screens()[1].availableGeometry())
 
     sys.exit(app.exec())

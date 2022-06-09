@@ -2,6 +2,8 @@ import PySide6
 from PySide6 import QtCore, QtGui
 from PySide6.QtGui import QColor
 
+from components.variable.watchable_variable import WatchableRangeVariable
+
 """
 Drawing tools that weren't as easy with the default QT library
 """
@@ -53,16 +55,30 @@ def draw_box(painter: QtGui.QPainter, x: int, y: int, w: int, h: int):
 
 def draw_rect(painter: QtGui.QPainter, cx: int, cy: int, width: int, height: int):
     """
-    Draws a square
+    Draws a rect
     """
-    painter.setBrush(QColor(255, 255, 255))
 
-    pen = QtGui.QPen(QtGui.Qt.white)
-    pen.setColor(QtGui.qRgb(200, 200, 200))
+    pen = QtGui.QPen(QtGui.qRgb(200, 200, 200))
     pen.setWidth(3)
     painter.setPen(pen)
+    painter.drawRect(cx, cy, width, height)
 
-    painter.drawRoundedRect(cx, cy, width, height, 10, 10)
+def fill_rect(painter: QtGui.QPainter, cx: int, cy: int, width: int, height: int, watchable_variable: WatchableRangeVariable):
+    """
+    Fills the rect
+    """
+
+    pen = QtGui.QPen(QtGui.qRgb(200, 200, 200))
+    pen.setWidth(0)
+    painter.setPen(pen)
+
+    painter.setBrush(QColor(255, 255, 255))
+
+    fill_height = height / watchable_variable.get_upper_value() * watchable_variable.get_value()
+
+    fill_height = height - fill_height + 2
+
+    painter.drawRect(cx + 1, cy + fill_height, width - 3, height - fill_height - 1)
 
 def draw_text_at(painter: QtGui.QPainter, x: int, y: int, w: int, h: int, text: str, font: QtGui.QFont = FONT_MD):
     """

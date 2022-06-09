@@ -56,6 +56,8 @@ class DemoDashboardConfig(DashboardConfig):
         variable_temp = DemoLoopingVariable(50, 50, 240)
         variable_bar = DemoLoopingVariable(50, 50, 240)
 
+        variable_temp_bar = DemoLoopingVariable(0, 0, 100)
+
         variable_blinker = IntervalOnOffVariable(500)
 
         tempvariable_battery = SimpleRangeVariable(0, 0, 255)
@@ -117,8 +119,8 @@ class DemoDashboardConfig(DashboardConfig):
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
             SvgIndicator(Icons.LEFT_ARROW, proxied_variable, 150, 150, 100, Colors.GREEN),
-            SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
-            SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.GREEN),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.GREEN),
 
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[7], window_width - 100, 300, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[6], window_width - 100, 350, 50, Colors.GREEN),
@@ -131,5 +133,5 @@ class DemoDashboardConfig(DashboardConfig):
 
             NotificationBox(notification_list, window_width-270, 100, 250, 400, 50),
 
-            BarDisplay(variable_bar, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200)
+            BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200, display_description="MOTOR SPEED", display_unit="rpm")
         ]
