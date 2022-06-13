@@ -4,6 +4,7 @@ from utils.com_supervisor.readable.serial import SerialReadable
 from configuration.setup.setup import Setup
 from utils.context.context import Context
 
+
 class SerialSetup(Setup):
     """
     App setup with serial communication.
@@ -16,7 +17,7 @@ class SerialSetup(Setup):
         readable = SerialReadable(self.SERIAL_DEVICE, self.BAUD)
         supervisor = SimpleComSupervisor(readable)
 
-        environment={
+        environment = {
             NOTIFICATION_KEY: StaticNotificationList(notifications=
             [
                 Notification("This is a warning", NotificationStyles.WARNING()),

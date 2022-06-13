@@ -1,6 +1,6 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
-from collections.abc import Callable
 from utils.context.context import Context
+
 
 class DemoLoopingVariable(WatchableRangeVariable):
     """
@@ -21,7 +21,7 @@ class DemoLoopingVariable(WatchableRangeVariable):
 
     def get_value(self):
         return self.value
-    
+
     def set_value(self, value):
         self.value = value
 
@@ -69,7 +69,7 @@ class IntervalOnOffVariable(WatchableVariable):
 
     def get_value(self):
         return self.value
-    
+
     def set_value(self, value):
         self.value = value
 

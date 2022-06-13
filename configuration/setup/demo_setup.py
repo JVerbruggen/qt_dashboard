@@ -8,6 +8,7 @@ from utils.context.context import Context
 
 NOTIFICATION_KEY = "notifications"
 
+
 class DemoSetup(Setup):
     """
     Demo app setup.
@@ -22,7 +23,7 @@ class DemoSetup(Setup):
             "0x420": partial(Mock.increment, 1),
         })
 
-        environment={
+        environment = {
             NOTIFICATION_KEY: StaticNotificationList(notifications=
             [
                 Notification("This is a warning", NotificationStyles.WARNING()),

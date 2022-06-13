@@ -2,6 +2,7 @@ from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass
 from components.variable.collector.byte_collector import ByteCollector
 
+
 @dataclass
 class AccumulatedVariable(WatchableVariable):
     """

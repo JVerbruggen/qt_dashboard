@@ -1,8 +1,8 @@
 from utils.extra_math import *
-from utils.drawing import *
 from components.drawable.drawable import Drawable
 from components.variable.watchable_variable import WatchableRangeVariable
 from utils.painter.painter import Painter
+
 
 class Gauge(Drawable):
     """
@@ -84,24 +84,25 @@ class Gauge(Drawable):
 
     def __draw_structure(self, painter: Painter):
         painter.draw_arc(self.cx, self.cy, self.size + 20, self.LOWER_DEG, self.UPPER_DEG - self.LOWER_DEG,
-                 width=self.STRUCTURE_DRAW_WEIGHT)
+                         width=self.STRUCTURE_DRAW_WEIGHT)
 
     def __draw_rod(self, painter: Painter):
         from_x = self.cx
         from_y = self.cy
         to_x = math.cos(self.theta) * self.size + self.cx
         to_y = -math.sin(self.theta) * self.size + self.cy
-        painter.draw_rounded_line(from_x, from_y, int(to_x), int(to_y), width=self.ROD_DRAW_WEIGHT)
+        painter.draw_rounded_line(from_x, from_y, int(to_x), int(to_y), width=self.ROD_DRAW_WEIGHT, color=(200, 0, 0, 255))
 
     def __draw_hints(self, painter: Painter):
-        hintvalues_distance = self.size / 2
-
         for (x, y, value) in self.hints:
-            painter.draw_text_at(x - 25, y - 25, 50, 50, (200,200,200,255), str(value), self.display_hintvalues_font)
-            # painter.drawText(x - 25, y - 25, 50, 50, 0x0084, str(value))
+            painter.draw_text_at(x - 25, y - 25, 50, 50, (200, 200, 200, 255), str(value), self.display_hintvalues_font)
 
     def __draw_info(self, painter: Painter):
-        painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4), self.size * 2, 100, (200,200,200,255),
-                     "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, self.display_value_font)
-        painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4 - 25), self.size * 2, 100, (200,200,200,255),
-                     self.display_description, self.display_description_font)
+        painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4), self.size * 2, 100,
+                             (200, 200, 200, 255),
+                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit,
+                             self.display_value_font)
+
+        painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4 - 25), self.size * 2, 100,
+                             (200, 200, 200, 255),
+                             self.display_description, self.display_description_font)

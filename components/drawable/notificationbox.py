@@ -1,7 +1,6 @@
 from components.drawable.drawable import Drawable
 from components.variable.notification import NotificationList
 from dataclasses import dataclass
-import utils.drawing
 from utils.painter.painter import Painter
 import math
 

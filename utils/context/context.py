@@ -1,5 +1,6 @@
 from collections.abc import Callable
 
+
 class Context:
     """
     Helper functions that rely on the implementation of the context.

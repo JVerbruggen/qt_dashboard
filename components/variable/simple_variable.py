@@ -1,5 +1,6 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
 
+
 class SimpleRangeVariable(WatchableRangeVariable):
     """
     A simple implementation of the WatchableRangeVariable 
@@ -36,4 +37,3 @@ class SimpleVariable(WatchableVariable):
 
     def set_value(self, value):
         self.value = value
-

@@ -1,6 +1,7 @@
 from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass
 
+
 @dataclass(slots=True)
 class ProxyVariable(WatchableVariable):
     """
@@ -22,6 +23,7 @@ class ProxyVariable(WatchableVariable):
             if variable is None: continue
             variable.set_value(byte)
 
+
 @dataclass(slots=True)
 class ProxyVariableWithState(WatchableVariable):
     state_byte_index: int
@@ -36,6 +38,6 @@ class ProxyVariableWithState(WatchableVariable):
         state = byte_array[self.state_byte_index]
 
         if state not in self.states: return
-        
+
         selected_proxy = self.states[state]
         selected_proxy.set_value(value)

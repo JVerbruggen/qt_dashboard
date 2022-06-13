@@ -1,17 +1,11 @@
-from typing import List
-
-from PySide6 import QtGui
-
 from components.drawable.bar_display import BarDisplay
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
-from components.drawable.drawable import Drawable
 from components.drawable.notificationbox import NotificationBox
 from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import StaticNotificationList, Notification, NotificationStyles
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
@@ -19,11 +13,11 @@ from components.variable.processor.little_endian_processor import LittleEndianPr
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
-from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
 from utils.context.context import Context
 from utils.icons import Icons
+
 
 class DemoDashboardConfig(DashboardConfig):
     """
@@ -33,7 +27,6 @@ class DemoDashboardConfig(DashboardConfig):
 
     PAGE_IDEN_MAIN = "main"
     PAGE_IDEN_MSG = "messages"
-
 
     GAUGE_OFFX_INNER = 125
     GAUGE_OFFX_OUTER = 380
@@ -46,7 +39,10 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, supervisor: ComSupervisor):	
+    BAR_OFFX = 500
+    BAR_OFFy = 300
+
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), environment: {} = {}):
         self.supervisor = supervisor
         self.environment = environment
         self.window = window
@@ -85,8 +81,9 @@ class DemoDashboardConfig(DashboardConfig):
         notification_height = 70
 
         return [
-            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy, 
-                window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
+            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy,
+                            window_width - notification_paddingx * 2, window_height - notification_paddingy * 2,
+                            notification_height)
         ]
 
     def __page_main(self, window):
@@ -96,10 +93,10 @@ class DemoDashboardConfig(DashboardConfig):
         variable_dummy = SimpleRangeVariable(40, 0, 100)
         variable_motorspeed = DemoLoopingVariable(self.context, 0, 0, 60)
         variable_temp = DemoLoopingVariable(self.context, 50, 50, 240)
-        variable_bar = DemoLoopingVariable(50, 50, 240)
+        variable_bar = DemoLoopingVariable(self.context, 50, 50, 240)
 
         variable_blinker = IntervalOnOffVariable(self.context, 500)
-        variable_temp_bar = DemoLoopingVariable(0, 0, 100)
+        variable_temp_bar = DemoLoopingVariable(self.context, 0, 0, 100)
 
         tempvariable_battery = SimpleRangeVariable(0, 0, 255)
         variable_off = SimpleVariable(0)
@@ -108,7 +105,7 @@ class DemoDashboardConfig(DashboardConfig):
 
         proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
         proxy_variable = ProxyVariable({0: proxied_variable})
-        
+
         # notification_list = StaticNotificationList(notifications=
         #     [
         #         Notification("This is a warning", NotificationStyles.WARNING()),
@@ -139,25 +136,25 @@ class DemoDashboardConfig(DashboardConfig):
 
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
-                display_description="SPEED", display_unit="km/h", hint_range=13),
+                  display_description="SPEED", display_unit="km/h", hint_range=13),
             Gauge(variable_motorspeed, window_width / 2 + self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 1,
-                display_description="MOTOR SPEED", display_unit="rpm"),
+                  display_description="MOTOR SPEED", display_unit="rpm"),
             Gauge(variable_temp, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
             SvgIndicator(Icons.LEFT_ARROW, proxied_variable, 150, 150, 100, Colors.GREEN),
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.GREEN),
@@ -172,6 +169,7 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
-            NotificationBox(self.environment["notifications"], window_width-270, 100, 250, 400, 50)
-            BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200, display_description="MOTOR SPEED", display_unit="rpm")
+            NotificationBox(self.environment["notifications"], window_width - 270, 100, 250, 400, 50),
+            BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200,
+                       display_description="MOTOR SPEED", display_unit="rpm")
         ]

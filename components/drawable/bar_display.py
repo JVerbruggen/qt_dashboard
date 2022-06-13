@@ -1,6 +1,7 @@
 from components.drawable.drawable import Drawable
-from utils.drawing import *
+from components.variable.watchable_variable import WatchableRangeVariable
 from utils.extra_math import point_at_angle
+from utils.painter.painter import Painter
 
 
 class BarDisplay(Drawable):
@@ -37,20 +38,6 @@ class BarDisplay(Drawable):
         self.hint_range = hint_range
 
         self.__prepare_hints()
-        self.__prepare_visuals()
-
-    def __prepare_visuals(self):
-        self.display_description_font = QtGui.QFont()
-        self.display_description_font.setPixelSize(self.DESC_FONT_SIZE)
-
-        self.display_value_font = QtGui.QFont()
-        self.display_value_font.setPixelSize(self.VALUE_FONT_SIZE)
-        self.display_value_font.setBold(True)
-
-        self.display_hintvalues_font = QtGui.QFont()
-        self.display_hintvalues_font.setPixelSize(self.HINT_FONT_SIZE)
-        self.display_hintvalues_font.setBold(True)
-        self.display_hintvalues_font.setLetterSpacing(QtGui.QFont.SpacingType.AbsoluteSpacing, 1)
 
     def __prepare_hints(self):
         hint_values = [self.lower_val]
@@ -66,7 +53,7 @@ class BarDisplay(Drawable):
     def update_value(self, value):
         self.value = value
 
-    def draw(self, painter: QtGui.QPainter):
+    def draw(self, painter: Painter):
         self.update_value(self.watching_variable.get_value())
 
         self.__draw_hints(painter)
@@ -75,21 +62,21 @@ class BarDisplay(Drawable):
         self.__draw_info(painter)
 
     def __draw_structure(self, painter):
-        draw_rect(painter, self.cx, self.cy, self.width, self.height)
+        painter.draw_box(self.cx, self.cy, self.width, self.height, (200, 200, 200, 255))
 
     def __fill_structure(self, painter):
-        fill_rect(painter, self.cx, self.cy, self.width, self.height, self.watching_variable)
+        fill_height = self.height / self.watching_variable.get_upper_value() * self.watching_variable.get_value()
+        fill_height = self.height - fill_height + 2
+
+        painter.draw_box_filled(self.cx + 1, self.cy + fill_height, self.width - 3, self.height - fill_height - 1, (200, 200, 200, 255))
 
     def __draw_hints(self, painter):
-        painter.setFont(self.display_hintvalues_font)
-        painter.setPen(QtGui.qRgb(200, 200, 200))
-
         for (x, y, value) in self.hints:
-            painter.drawText(x, y, 50, 50, 0x0084, str(value))
+            painter.draw_text_at(x, y, 50, 50, (200, 200, 200, 255), str(value), "GaugeSM")
 
-    def __draw_info(self, painter):
-        draw_text_at(painter, self.cx, self.cy - 55, self.width, self.height,
-                     self.display_description, self.display_description_font)
+    def __draw_info(self, painter: Painter):
+        painter.draw_text_at(self.cx, self.cy - 55, self.width, self.height, (200, 200, 200, 255),
+                     self.display_description, "BarMD")
 
-        draw_text_at(painter, self.cx, self.cy - 35, self.width, self.height,
-                     "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, self.display_value_font)
+        painter.draw_text_at(self.cx, self.cy - 35, self.width, self.height, (200, 200, 200, 255),
+                     "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "BarMD")

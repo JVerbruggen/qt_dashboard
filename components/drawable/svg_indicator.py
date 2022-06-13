@@ -3,12 +3,14 @@ from components.variable.watchable_variable import WatchableVariable
 from utils.colors import Colors
 from utils.painter.painter import Painter
 
+
 class SvgIndicator(Drawable):
     """
     An indicater depicted by a SVG icon that listens to a variable and displays its value (on or off).
     """
-    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, 
-            on_color: (int, int, int, int) = Colors.GREEN):
+
+    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int = 10,
+                 on_color: (int, int, int, int) = Colors.GREEN):
         self.svg_filepath = svg_filepath
         self.watchable_variable = watchable_variable
         self.on_color = on_color
@@ -23,8 +25,8 @@ class SvgIndicator(Drawable):
         self.blink_state = False
 
     def set_color(self, new_state: int, painter: Painter):
-        painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, 
-            self.on_color if new_state else Colors.BLACK)
+        painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size,
+                         self.on_color if new_state else Colors.BLACK)
         # utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
 
     def draw(self, painter: Painter):
@@ -33,7 +35,7 @@ class SvgIndicator(Drawable):
         current_state = self.watchable_variable.get_value()
 
         self.set_color(current_state, painter)
-    
+
     def __init_img(self, painter: Painter):
         """Initializes on the first draw."""
         self.img = painter.get_image_from(self.svg_filepath)
@@ -45,8 +47,9 @@ class SvgBlinker(SvgIndicator):
     Blinks if value is 1, goes to off color if 0
     """
 
-    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, interval: int=30,
-            on_color: (int, int, int, int) = Colors.GREEN):
+    def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int = 10,
+                 interval: int = 30,
+                 on_color: (int, int, int, int) = Colors.GREEN):
         super().__init__(svg_filepath, watchable_variable, x, y, size, on_color)
 
         self.interval_state = interval
@@ -67,8 +70,8 @@ class SvgBlinker(SvgIndicator):
                 self.interval_state = self.interval
 
             self.update_interval()
-            
-        elif self.blinking: 
+
+        elif self.blinking:
             self.blinking = False
             self.blink_phase = False
 

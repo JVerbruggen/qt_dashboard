@@ -1,3 +1,6 @@
+from PySide6 import QtCore
+
+
 def read_file(filename: str) -> QtCore.QByteArray:
     """
     DEPRECATED

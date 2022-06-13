@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-import utils.drawing
 from utils.colors import Colors
 from utils.icons import Icons
 from utils.painter.painter import Painter
