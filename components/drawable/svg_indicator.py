@@ -1,16 +1,14 @@
 from components.drawable.drawable import Drawable
-from PySide6 import QtGui
-
 from components.variable.watchable_variable import WatchableVariable
 from utils.colors import Colors
-import utils.drawing
+from utils.painter.painter import Painter
 
 class SvgIndicator(Drawable):
     """
     An indicater depicted by a SVG icon that listens to a variable and displays its value (on or off).
     """
     def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, 
-            on_color: QtGui.QColor = Colors.GREEN):
+            on_color: (int, int, int, int) = Colors.GREEN):
         self.svg_filepath = svg_filepath
         self.watchable_variable = watchable_variable
         self.on_color = on_color
@@ -19,22 +17,26 @@ class SvgIndicator(Drawable):
         self.size = size
         self.old_state = -1
 
-        self.img = QtGui.QPixmap(self.svg_filepath)
-        utils.drawing.fill_svg(self.img, self.on_color)
+        self.img = None
+        # utils.drawing.fill_svg(self.img, self.on_color)
 
         self.blink_state = False
 
-    def set_color(self, new_state: int):
-        self.blink_state = not self.blink_state
-        utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
+    def set_color(self, new_state: int, painter: Painter):
+        painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, 
+            self.on_color if new_state else Colors.BLACK)
+        # utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
 
-    def draw(self, painter: QtGui.QPainter):
+    def draw(self, painter: Painter):
+        if self.img is None: self.__init_img(painter)
+
         current_state = self.watchable_variable.get_value()
 
-        if current_state != self.old_state:
-            self.set_color(current_state)
-
-        painter.drawPixmap(int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size, self.img)
+        self.set_color(current_state, painter)
+    
+    def __init_img(self, painter: Painter):
+        """Initializes on the first draw."""
+        self.img = painter.get_image_from(self.svg_filepath)
 
 
 class SvgBlinker(SvgIndicator):
@@ -44,7 +46,7 @@ class SvgBlinker(SvgIndicator):
     """
 
     def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int=10, interval: int=30,
-            on_color: QtGui.QColor = Colors.GREEN):
+            on_color: (int, int, int, int) = Colors.GREEN):
         super().__init__(svg_filepath, watchable_variable, x, y, size, on_color)
 
         self.interval_state = interval
@@ -58,7 +60,7 @@ class SvgBlinker(SvgIndicator):
             self.blink_phase = not self.blink_phase
             self.interval_state = self.interval
 
-    def set_color(self, new_state: int):
+    def set_color(self, new_state: int, painter: Painter):
         if new_state == 1:
             if not self.blinking:
                 self.blinking = True
@@ -71,4 +73,4 @@ class SvgBlinker(SvgIndicator):
             self.blink_phase = False
 
         blink_state = int(self.blink_phase)
-        super().set_color(blink_state)
+        super().set_color(blink_state, painter)

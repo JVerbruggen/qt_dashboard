@@ -2,16 +2,24 @@ import sys
 
 import PySide6
 from PySide6 import QtCore, QtWidgets, QtGui
+from configuration.dashboard_config import DashboardConfig
 from PySide6.QtGui import QScreen
 
 from configuration.demo_dashboard_config import DemoDashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
+from configuration.setup.setup import Setup
+from dataclasses import dataclass
+from utils.painter.qtpainter import HMIQtPainter
+from utils.context.qt_context import HMIQtContext
 
 WINDOW = (1600, 900)
 FPS = 60
 BACKGROUND_STYLE = "* {background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #444257, stop:1 #21202e);}"
 
+@dataclass
+class DashboardPage:
+    drawables: list["Drawable"]
 
 class Dashboard(QtWidgets.QWidget):
     """
@@ -19,13 +27,12 @@ class Dashboard(QtWidgets.QWidget):
     Extends QWidget, where paintEvent is called by QT to update the widget.
     """
 
-    def __init__(self, configuration):
+    def __init__(self, configuration: DashboardConfig):
         super().__init__()
+        self.configuration = configuration
         self.layout = QtWidgets.QVBoxLayout(self)
         self.setAutoFillBackground(True)
         self.setStyleSheet(BACKGROUND_STYLE)
-
-        self.drawables = configuration.get_drawables(WINDOW)
 
         self.timer = QtCore.QTimer(self)
         self.timer.timeout.connect(self.dashboard_update)
@@ -36,20 +43,31 @@ class Dashboard(QtWidgets.QWidget):
 
     def paintEvent(self, event):
         qp = QtGui.QPainter(self)
+        painter = HMIQtPainter(qp)
 
-        for drawable in self.drawables:
-            drawable.draw(qp)
+        for drawable in self.configuration.get_drawables():
+            drawable.draw(painter)
 
         qp.end()
 
+    def mousePressEvent(self, event:QtGui.QMouseEvent):
+        pos = event.position()
+        self.configuration.click_event(pos.x(), pos.y())
+
+def get_setup() -> Setup:
+    return DemoSetup()
+    # return SerialSetup()
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
 
-    setup = DemoSetup()
-    # setup = SerialSetup()
-    widget = Dashboard(setup.create())
+    setup = get_setup()
+    context = HMIQtContext()
+
+    widget = Dashboard(setup.create(context, WINDOW))
     widget.setFixedSize(WINDOW[0], WINDOW[1])
+    widget.setMouseTracking(True)
+    # enable touch controls here
     widget.show()
     widget.setGeometry(app.screens()[1].availableGeometry())
 

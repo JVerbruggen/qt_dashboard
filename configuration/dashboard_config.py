@@ -13,3 +13,10 @@ class DashboardConfig:
         """
         
         raise NotImplementedError()
+    
+    def click_event(self, x, y) -> None:
+        """
+        Handle click event.
+        """
+        
+        raise NotImplementedError()

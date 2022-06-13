@@ -1,5 +1,3 @@
-from PySide6 import QtGui
-
 class Icons:
     UNKNOWN = "assets/warning.svg"
     BATTERY = "assets/battery.svg"

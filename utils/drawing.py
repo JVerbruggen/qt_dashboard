@@ -5,6 +5,7 @@ from PySide6.QtGui import QColor
 from components.variable.watchable_variable import WatchableRangeVariable
 
 """
+DEPRECATED
 Drawing tools that weren't as easy with the default QT library
 """
 

@@ -15,13 +15,14 @@ from components.variable.notification import StaticNotificationList, Notificatio
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
-
 from components.variable.processor.little_endian_processor import LittleEndianProcessor
+from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
 from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
+from utils.context.context import Context
 from utils.icons import Icons
 
 class DemoDashboardConfig(DashboardConfig):
@@ -29,6 +30,10 @@ class DemoDashboardConfig(DashboardConfig):
     Demo dashboard configuration.
     Provides exact layout of all elements.
     """
+
+    PAGE_IDEN_MAIN = "main"
+    PAGE_IDEN_MSG = "messages"
+
 
     GAUGE_OFFX_INNER = 125
     GAUGE_OFFX_OUTER = 380
@@ -41,38 +46,74 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    BAR_OFFX = 500
-    BAR_OFFy = 300
-
     def __init__(self, supervisor: ComSupervisor):	
         self.supervisor = supervisor
+        self.environment = environment
+        self.window = window
+        self.context = context
 
-    def get_drawables(self, window):
-        (window_width, window_height) = window
+        self.pages = {
+            self.PAGE_IDEN_MAIN: self.__page_main(window),
+            self.PAGE_IDEN_MSG: self.__page_notifications(window),
+        }
+
+        self.page_selector = PageSelectorFactory.from_settings({
+            "Main": self.PAGE_IDEN_MAIN,
+            "Messages": self.PAGE_IDEN_MSG,
+        })
+        self.__select_page(self.PAGE_IDEN_MAIN)
+
+    def get_drawables(self):
+        return self.pages[self.selected_page_iden] + [self.page_selector]
+
+    def click_event(self, x, y):
+        hit_button = self.page_selector.hits(x, y)
+        if hit_button is None: return
+        self.__select_page(hit_button.iden)
+
+    def __select_page(self, iden: str):
+        if iden not in self.pages: return
+
+        self.selected_page_iden = iden
+        self.selected_page = self.pages[self.selected_page_iden]
+        self.page_selector.set_selected(iden)
+
+    def __page_notifications(self, window):
+        window_width, window_height = window
+        notification_paddingx = 270
+        notification_paddingy = 100
+        notification_height = 70
+
+        return [
+            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy, 
+                window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
+        ]
+
+    def __page_main(self, window):
+        window_width, window_height = window
 
         variable_speed = SimpleRangeVariable(0, 0, 240)
         variable_dummy = SimpleRangeVariable(40, 0, 100)
-        variable_motorspeed = DemoLoopingVariable(0, 0, 60)
-        variable_temp = DemoLoopingVariable(50, 50, 240)
+        variable_motorspeed = DemoLoopingVariable(self.context, 0, 0, 60)
+        variable_temp = DemoLoopingVariable(self.context, 50, 50, 240)
         variable_bar = DemoLoopingVariable(50, 50, 240)
 
+        variable_blinker = IntervalOnOffVariable(self.context, 500)
         variable_temp_bar = DemoLoopingVariable(0, 0, 100)
-
-        variable_blinker = IntervalOnOffVariable(500)
 
         tempvariable_battery = SimpleRangeVariable(0, 0, 255)
         variable_off = SimpleVariable(0)
         variable_on = SimpleVariable(1)
-        variable_onoff_2000 = IntervalOnOffVariable(2000)
+        variable_onoff_2000 = IntervalOnOffVariable(self.context, 2000)
 
         proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
         proxy_variable = ProxyVariable({0: proxied_variable})
         
-        notification_list = StaticNotificationList(notifications=
-            [
-                Notification("This is a warning", NotificationStyles.WARNING()),
-                Notification("This is also a warning", NotificationStyles.CRUCIAL()),
-            ])
+        # notification_list = StaticNotificationList(notifications=
+        #     [
+        #         Notification("This is a warning", NotificationStyles.WARNING()),
+        #         Notification("This is also a warning", NotificationStyles.CRUCIAL()),
+        #     ])
 
         proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
         proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
@@ -94,7 +135,7 @@ class DemoDashboardConfig(DashboardConfig):
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
         # self.supervisor.register('0x69', proxy_variable, ByteMapper())
         self.supervisor.register('0x420', proxy, ByteMapper())
-        self.supervisor.start()
+        # self.supervisor.start()
 
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
@@ -131,7 +172,6 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
-            NotificationBox(notification_list, window_width-270, 100, 250, 400, 50),
-
+            NotificationBox(self.environment["notifications"], window_width-270, 100, 250, 400, 50)
             BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200, display_description="MOTOR SPEED", display_unit="rpm")
         ]

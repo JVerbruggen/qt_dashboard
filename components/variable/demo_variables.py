@@ -1,6 +1,6 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
-from PySide6 import QtCore
-
+from collections.abc import Callable
+from utils.context.context import Context
 
 class DemoLoopingVariable(WatchableRangeVariable):
     """
@@ -8,14 +8,12 @@ class DemoLoopingVariable(WatchableRangeVariable):
     Used for demonstration purposes.
     """
 
-    def __init__(self, default_value=0, lower_val=0, upper_val=100, increment=0.1, ms=10):
+    def __init__(self, context: Context, default_value=0, lower_val=0, upper_val=100, increment=0.1, ms=10):
         self.value = default_value
         self.lower_val = lower_val
         self.upper_val = upper_val
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update)
-        self.timer.start(ms)
         self.increment = increment
+        context.run_timer(self.update, ms)
 
     def update(self):
         self.value = ((self.value + self.increment - self.lower_val) % (
@@ -64,12 +62,10 @@ class IntervalOnOffVariable(WatchableVariable):
     Used for demonstration purposes.
     """
 
-    def __init__(self, interval):
+    def __init__(self, context: Context, interval: int):
         self.interval = interval
         self.value = 1
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.update)
-        self.timer.start(interval)
+        context.run_timer(self.update, interval)
 
     def get_value(self):
         return self.value
