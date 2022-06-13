@@ -8,12 +8,12 @@ class Painter:
     DEFAULT_FONT = "TimesMD"
     FONT_SM = "TimesSM"
 
-    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None, color=(200, 200, 200, 255)):
+    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None, color=(255, 255, 255, 255)):
         """
         Draws a line with rounded corners.
         """
 
-    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None, color: (int, int, int, int) = (200, 200, 200, 255)):
+    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None, color: (int, int, int, int) = (255, 255, 255, 255)):
         """
         Draws a part circle.
         """
@@ -29,7 +29,7 @@ class Painter:
         """
 
     def draw_text_at(self, x: int, y: int, w: int, h: int, color: (int, int, int, int), text: str,
-                     font_str: str = "TimesMD"):
+                     font_str: str = "TimesMD", vpos: str = "top", hpos: str = "center"):
         """
         Draw text at given position and size.
         """

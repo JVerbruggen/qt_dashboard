@@ -91,18 +91,20 @@ class Gauge(Drawable):
         from_y = self.cy
         to_x = math.cos(self.theta) * self.size + self.cx
         to_y = -math.sin(self.theta) * self.size + self.cy
-        painter.draw_rounded_line(from_x, from_y, int(to_x), int(to_y), width=self.ROD_DRAW_WEIGHT, color=(200, 0, 0, 255))
+        painter.draw_rounded_line(from_x, from_y, int(to_x), int(to_y), width=self.ROD_DRAW_WEIGHT,
+                                  color=(200, 0, 0, 255))
 
     def __draw_hints(self, painter: Painter):
         for (x, y, value) in self.hints:
-            painter.draw_text_at(x - 25, y - 25, 50, 50, (200, 200, 200, 255), str(value), self.display_hintvalues_font)
+            painter.draw_text_at(x - 25, y - 25, 50, 50, (255, 255, 255, 255), str(value), self.display_hintvalues_font,
+                                 vpos="center")
 
     def __draw_info(self, painter: Painter):
         painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4), self.size * 2, 100,
-                             (200, 200, 200, 255),
+                             (255, 255, 255, 255),
                              "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit,
                              self.display_value_font)
 
         painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4 - 25), self.size * 2, 100,
-                             (200, 200, 200, 255),
+                             (255, 255, 255, 255),
                              self.display_description, self.display_description_font)

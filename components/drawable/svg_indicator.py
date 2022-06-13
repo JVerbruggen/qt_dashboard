@@ -26,7 +26,7 @@ class SvgIndicator(Drawable):
 
     def set_color(self, new_state: int, painter: Painter):
         painter.draw_svg(self.img, int(self.x - self.size / 2), int(self.y - self.size / 2), self.size, self.size,
-                         self.on_color if new_state else Colors.BLACK)
+                         self.on_color if new_state else Colors.GREY)
         # utils.drawing.fill_svg(self.img, self.on_color if new_state else Colors.BLACK)
 
     def draw(self, painter: Painter):
@@ -50,6 +50,7 @@ class SvgBlinker(SvgIndicator):
     def __init__(self, svg_filepath: str, watchable_variable: WatchableVariable, x: int, y: int, size: int = 10,
                  interval: int = 30,
                  on_color: (int, int, int, int) = Colors.GREEN):
+
         super().__init__(svg_filepath, watchable_variable, x, y, size, on_color)
 
         self.interval_state = interval

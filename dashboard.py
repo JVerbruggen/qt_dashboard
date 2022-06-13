@@ -1,25 +1,24 @@
 import sys
 
-import PySide6
 from PySide6 import QtCore, QtWidgets, QtGui
 from configuration.dashboard_config import DashboardConfig
-from PySide6.QtGui import QScreen
-
-from configuration.demo_dashboard_config import DemoDashboardConfig
 from configuration.setup.demo_setup import DemoSetup
-from configuration.setup.serial_setup import SerialSetup
 from configuration.setup.setup import Setup
 from dataclasses import dataclass
+
+from configuration.setup_v1 import SetupV1
 from utils.painter.qtpainter import HMIQtPainter
 from utils.context.qt_context import HMIQtContext
 
 WINDOW = (1600, 900)
 FPS = 60
-BACKGROUND_STYLE = "* {background: qlineargradient( x1:0 y1:0, x2:0 y2:1, stop:0 #444257, stop:1 #21202e);}"
+BACKGROUND_STYLE = "background-color: black"
+
 
 @dataclass
 class DashboardPage:
     drawables: list["Drawable"]
+
 
 class Dashboard(QtWidgets.QWidget):
     """
@@ -50,13 +49,16 @@ class Dashboard(QtWidgets.QWidget):
 
         qp.end()
 
-    def mousePressEvent(self, event:QtGui.QMouseEvent):
+    def mousePressEvent(self, event: QtGui.QMouseEvent):
         pos = event.position()
         self.configuration.click_event(pos.x(), pos.y())
 
+
 def get_setup() -> Setup:
-    return DemoSetup()
+    return SetupV1()
+    # return DemoSetup()
     # return SerialSetup()
+
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
@@ -69,6 +71,8 @@ if __name__ == "__main__":
     widget.setMouseTracking(True)
     # enable touch controls here
     widget.show()
-    widget.setGeometry(app.screens()[1].availableGeometry())
+
+    if len(app.screens()) > 1:
+        widget.setGeometry(app.screens()[1].availableGeometry())
 
     sys.exit(app.exec())

@@ -1,6 +1,5 @@
 from components.drawable.drawable import Drawable
 from components.variable.watchable_variable import WatchableRangeVariable
-from utils.extra_math import point_at_angle
 from utils.painter.painter import Painter
 
 
@@ -46,8 +45,15 @@ class BarDisplay(Drawable):
 
         hint_values += [self.upper_val]
 
+        base_x = self.cx - 55
+        base_y = self.cy + self.height
+        text_height = 20
+        number_offset = self.height / (self.hint_range - 1)
+
         for i, value in enumerate(hint_values):
-            (x, y) = point_at_angle(self.cx, self.cy, 100, self.size)
+            x = base_x
+            y = base_y - (i * number_offset) - text_height * 0.5
+
             self.hints += [(x, y, value)]
 
     def update_value(self, value):
@@ -62,21 +68,22 @@ class BarDisplay(Drawable):
         self.__draw_info(painter)
 
     def __draw_structure(self, painter):
-        painter.draw_box(self.cx, self.cy, self.width, self.height, (200, 200, 200, 255))
+        painter.draw_box(self.cx, self.cy, self.width, self.height, (255, 255, 255, 255))
 
     def __fill_structure(self, painter):
-        fill_height = self.height / self.watching_variable.get_upper_value() * self.watching_variable.get_value()
-        fill_height = self.height - fill_height + 2
+        fill_height = self.height / (self.watching_variable.get_upper_value() - self.watching_variable.get_lower_value()) * self.watching_variable.get_value()
+        fill_height = self.height - fill_height + self.watching_variable.get_lower_value() + 2
 
-        painter.draw_box_filled(self.cx + 1, self.cy + fill_height, self.width - 3, self.height - fill_height - 1, (200, 200, 200, 255))
+        painter.draw_box_filled(self.cx + 1, self.cy + fill_height, self.width - 3, self.height - fill_height - 1,
+                                (255, 255, 255, 255))
 
     def __draw_hints(self, painter):
         for (x, y, value) in self.hints:
-            painter.draw_text_at(x, y, 50, 50, (200, 200, 200, 255), str(value), "GaugeSM")
+            painter.draw_text_at(x, y, 50, 50, (255, 255, 255, 255), str(value), "GaugeSM", hpos="right")
 
     def __draw_info(self, painter: Painter):
-        painter.draw_text_at(self.cx, self.cy - 55, self.width, self.height, (200, 200, 200, 255),
-                     self.display_description, "BarMD")
+        painter.draw_text_at(self.cx, self.cy - 55, self.width, self.height, (255, 255, 255, 255),
+                             self.display_description, "BarMD")
 
-        painter.draw_text_at(self.cx, self.cy - 35, self.width, self.height, (200, 200, 200, 255),
-                     "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "BarMD")
+        painter.draw_text_at(self.cx, self.cy - 35, self.width, self.height, (255, 255, 255, 255),
+                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "BarMD")
