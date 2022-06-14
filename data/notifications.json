@@ -1,0 +1,20 @@
+{
+    "notifications": {
+        "6840110": { "type":"simple", "style":"info", "message":"Operational"},
+        "6840112": { "type":"simple", "style":"warning", "message":"Error present"},
+        "6840113": { "type":"simple", "style":"info", "message":"Regenerative charging"},
+        "68401145": { "type":"multiple", "style":"info", "messages":[
+            "Not in charging mode", "Charging mode", "Charging active", "Charging done"
+        ]},
+        "68401167": { "type":"multiple", "style":"info", "messages":[
+            "Not in balancing mode", "Balancing mode", "Balancing active", "Balancing done"
+        ]},
+        "6840120": { "type":"simple", "style":"info", "message":"Over Voltage" },
+        "6840121": { "type":"simple", "style":"info", "message":"Under Voltage" },
+        "6840122": { "type":"simple", "style":"info", "message":"Over Temperature Cell" },
+        "6840123": { "type":"simple", "style":"info", "message":"Under Temperature Cell" },
+        "6840124": { "type":"simple", "style":"info", "message":"Charge Current" },
+        "6840125": { "type":"simple", "style":"info", "message":"Task Timeout" },
+        "6840126": { "type":"simple", "style":"info", "message":"Watchdog Timeout" }
+    }
+}

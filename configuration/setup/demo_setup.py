@@ -6,6 +6,7 @@ from functools import partial
 from components.variable.notification import StaticNotificationList, Notification, NotificationStyles, NotificationUpdateEvent
 from utils.context.context import Context
 from components.variable.simple_variable import SimpleVariable
+from components.variable.factory.json_variable_factory import JsonVariableFactory
 
 class DemoSetup(Setup):
     """
@@ -18,12 +19,18 @@ class DemoSetup(Setup):
             # "0x18": Mock.random_first_byte,
             # "0x687": Mock.all_random_bytes,
             # "0x69": partial(Mock.take_from, ["00 00 00 00 00 00 00 00", "01 00 00 00 00 00 00 00"]),
-            "0x420": partial(Mock.increment, 1),
+            "0x420": partial(Mock.increment, 1, ["01" if i==0 else "00" for i in range(8)]),
         })
 
         environment={}
 
         supervisor = SimpleComSupervisor(readable)
-        config = DemoDashboardConfig(context=context, supervisor=supervisor, window=window, environment=environment)
+        notification_variable_factory = JsonVariableFactory()
+        config = DemoDashboardConfig(
+            context=context, 
+            supervisor=supervisor, 
+            window=window, 
+            notification_variable_factory=notification_variable_factory,
+            environment=environment)
 
         return config

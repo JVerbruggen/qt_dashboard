@@ -120,3 +120,4 @@ class NotificationStyles:
     WARNING = lambda : NotificationStyle(Icons.WARNING, Colors.ORANGE)
     WARNING_BATTERY = lambda : NotificationStyle(Icons.BATTERY, Colors.ORANGE)
     CRUCIAL = lambda : NotificationStyle(Icons.WARNING, Colors.RED)
+    INFO = lambda : NotificationStyle(Icons.UNKNOWN, Colors.GREEN)

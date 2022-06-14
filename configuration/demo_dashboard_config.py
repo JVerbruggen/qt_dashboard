@@ -13,6 +13,7 @@ from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
 from components.variable.processor.little_endian_processor import LittleEndianProcessor
+from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
@@ -44,21 +45,23 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), environment: {} = {}):	
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), notification_variable_factory: VariableFactory, environment: {} = {}):	
         self.supervisor = supervisor
         self.window = window
         self.context = context
 
-        notification_configuration = {
-            "0000": ("This is a warning", NotificationStyles.WARNING()),
-            "0001": ("This is also a warning", NotificationStyles.CRUCIAL()),
-        }
-        self.notification_visibility_variables = {
-            iden: SimpleVariable(1) for iden, _ in notification_configuration.items()
-        }
+        # notification_configuration = {
+        #     "0000": ("This is a warning", NotificationStyles.WARNING()),
+        #     "0001": ("This is also a warning", NotificationStyles.CRUCIAL()),
+        # }
+        # self.notification_visibility_variables = {
+        #     iden: SimpleVariable(1) for iden, _ in notification_configuration.items()
+        # }
 
         nue = NotificationUpdateEvent()
-        notifications = {iden: Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
+        # notifications = {iden: Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
+        # notifications = notification_variable_factory.get_variable()
+        notifications = []
         self.environment = {
             self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
         }
@@ -117,12 +120,7 @@ class DemoDashboardConfig(DashboardConfig):
 
         proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
         proxy_variable = ProxyVariable({0: proxied_variable})
-        
-        # notification_list = StaticNotificationList(notifications=
-        #     [
-        #         Notification("This is a warning", NotificationStyles.WARNING()),
-        #         Notification("This is also a warning", NotificationStyles.CRUCIAL()),
-        #     ])
+
 
         proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
         proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
