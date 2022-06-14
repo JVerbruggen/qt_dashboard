@@ -25,26 +25,33 @@ class NotificationList:
         """Renew notification list"""
         raise NotImplementedError()
 
-    def get_all(self) -> list["Notification"]:
+    def get_all(self) -> dict[str, "Notification"]:
         """Get visible notifications"""
+        raise NotImplementedError()
+
+    def set(self, iden: str, value: bool):
+        """Set a notification to a value for visibility"""
         raise NotImplementedError()
 
 @dataclass
 class StaticNotificationList(NotificationList):
     """State of current notifications, used as reference"""
-    notifications: list["Notification"]
+    notifications: dict[str, "Notification"]
     update_event: "NotificationUpdateEvent"
-    __visible_notifications: list["Notification"] = field(default_factory=list)
+    __visible_notifications: dict[str, "Notification"] = field(default_factory=dict)
 
     def renew(self):
         self.update_event.unset()
-        self.__visible_notifications = [n for n in self.notifications if n.is_visible()]
+        self.__visible_notifications = {iden: n for iden,n in self.notifications.items() if n.is_visible()}
     
     def get_all(self):
         if self.update_event.isset():
             self.renew()
 
         return self.__visible_notifications
+
+    def set(self, iden, value):
+        self.notifications[iden].set_visible(value)
 
 @dataclass
 class Notification:

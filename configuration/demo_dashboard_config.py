@@ -58,7 +58,7 @@ class DemoDashboardConfig(DashboardConfig):
         }
 
         nue = NotificationUpdateEvent()
-        notifications = [Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()]
+        notifications = {iden: Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
         self.environment = {
             self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
         }
@@ -73,7 +73,6 @@ class DemoDashboardConfig(DashboardConfig):
             "Messages": self.PAGE_IDEN_MSG,
         })
         self.__select_page(self.PAGE_IDEN_MAIN)
-
 
     def get_drawables(self):
         return self.pages[self.selected_page_iden] + [self.page_selector]
