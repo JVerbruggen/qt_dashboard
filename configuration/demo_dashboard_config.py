@@ -61,7 +61,7 @@ class DemoDashboardConfig(DashboardConfig):
         nue = NotificationUpdateEvent()
         # notifications = {iden: Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
         # notifications = notification_variable_factory.get_variable()
-        notifications = []
+        notifications = {}
         self.environment = {
             self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
         }
