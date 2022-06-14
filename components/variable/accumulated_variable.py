@@ -1,6 +1,6 @@
 from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass
-from components.variable.collector.byte_collector import ByteCollector
+from components.variable.collector.byte_collector import Collector
 
 @dataclass
 class AccumulatedVariable(WatchableVariable):
@@ -9,7 +9,7 @@ class AccumulatedVariable(WatchableVariable):
     Uses a processor to process multiple values.
     """
     value: int
-    collector: ByteCollector
+    collector: Collector
 
     def get_value(self):
         return self.value

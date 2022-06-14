@@ -1,26 +1,25 @@
 from dataclasses import dataclass, field
+from components.variable.processor.byte_processor import ByteProcessor
+from components.variable.collector.collector import Collector
 
-@dataclass(slots=True)
-class ByteCollector:
+@dataclass
+class ByteCollector(Collector):
+    processor: ByteProcessor
     byte_count: int = 0
     byte_count_state: int = 0
     byte_buffer: list[str] = field(default_factory=list)
-    processor: ByteProcessor
 
     def __reset(self):
-        byte_buffer = []
-        byte_count_state = 0
+        self.byte_buffer = []
+        self.byte_count_state = 0
 
     def add_to_buffer(self, value) -> int:
         self.byte_buffer += [value]
         self.byte_count_state = len(byte_buffer)
         
-        if self.byte_count_state == self.byte_count:
+        if self.byte_count_state >= self.byte_count:
             result = processor.process(self.byte_buffer)
             self.__reset()
             return result
         
         return None
-
-        
-
