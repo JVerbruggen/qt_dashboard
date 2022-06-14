@@ -1,22 +1,23 @@
 {
-    "iden": "0x684",
-    "spec": {
-        "type": "switch-by-state-byte",
-        "switch-byte-index": 0,
-        "states": {
-            "01": {
-                "type": "byte-proxy",
-                "bytes": {
-                    "1": {
-                        "type": "bit-proxy",
-                        "bits": {
-                            "0": "6840110",
-                            "2": "6840112",
-                            "3": "6840113",
-                            "4": "68401145",
-                            "5": "68401145",
-                            "6": "68401167",
-                            "7": "68401167"
+    "config": {
+        "0x684": {
+            "type": "switch-by-state-byte",
+            "switch-byte-index": 0,
+            "states": {
+                "01": {
+                    "type": "byte-proxy",
+                    "bytes": {
+                        "1": {
+                            "type": "bit-proxy",
+                            "bits": {
+                                "0": "6840110",
+                                "2": "6840112",
+                                "3": "6840113",
+                                "4": "68401145",
+                                "5": "68401145",
+                                "6": "68401167",
+                                "7": "68401167"
+                            }
                         }
                     }
                 }

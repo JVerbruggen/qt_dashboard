@@ -36,6 +36,6 @@ class ProxyVariableWithState(WatchableVariable):
         state = byte_array[self.state_byte_index]
 
         if state not in self.states: return
-        
+
         selected_proxy = self.states[state]
         selected_proxy.set_value(value)

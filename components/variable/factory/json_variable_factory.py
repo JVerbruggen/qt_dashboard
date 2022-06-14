@@ -13,27 +13,33 @@ class JsonVariableFactory(VariableFactory):
     byte_config: str = "data/input-byte-config.json"
     variable_pool: dict[str, "WatchableVariable"] = field(default_factory=dict)
     notifications: dict[str, "Notification"] = field(default_factory=dict)
-    nue: NotificationUpdateEvent = NotificationUpdateEvent()
+    nue: NotificationUpdateEvent = None
 
     def parse_variables(self):
         json_notification_config = self.__get_json_contents(self.notification_config)
         json_byte_config = self.__get_json_contents(self.byte_config)
-        variable = self.__parse_json_root(json_byte_config, json_notification_config)
+        variables = self.__parse_json_root(json_byte_config, json_notification_config)
         
-        return variable
+        return variables
 
     def get_notifications(self):
         return self.notifications
+
+    def set_update_event(self, nue: NotificationUpdateEvent):
+        self.nue = nue
 
     def __get_json_contents(self, filename):
         with open(filename, 'r') as f:
             return json.load(f)
 
-    def __parse_json_root(self, json_byte_config, json_notification_config) -> "WatchableVariable":
-        iden = json_byte_config["iden"]
-        spec = json_byte_config["spec"]
-        child = self.__parse_json_child(spec, json_notification_config)
-        return child
+    def __parse_json_root(self, json_byte_config, json_notification_config) -> dict[str, "WatchableVariable"]:
+        config = json_byte_config["config"]
+        rootdict = {}
+
+        for iden, spec in config.items():
+            rootdict[iden] = self.__parse_json_child(spec, json_notification_config)
+        
+        return rootdict
 
     def __parse_json_child(self, json_node, json_notification_config):
         child_type = json_node["type"]
@@ -44,7 +50,7 @@ class JsonVariableFactory(VariableFactory):
     def __parse_json_switchbystatebyte(self, json_node, json_notification_config):
         raw_switch_byte_index = json_node["switch-byte-index"]
         raw_states = json_node["states"]
-        states = { int(byte_value, 16): self.__parse_json_child(state, json_notification_config) \
+        states = { byte_value.encode(): self.__parse_json_child(state, json_notification_config) \
             for byte_value,state in raw_states.items()}
 
         return ProxyVariableWithState(int(raw_switch_byte_index), states)
@@ -83,11 +89,11 @@ class JsonVariableFactory(VariableFactory):
 
         raise ValueError(f"Notification type {s_type} not supported")
 
-    def __variable_parse_simple(self, json_node) -> "WatchableVariable":
-        return SimpleVariable()
+    def __variable_parse_simple(self, json_node) -> "WatchableVariablse":
+        return SimpleVariable(callback=self.nue.set)
 
     def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return SimpleNotification(json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable)
+        return SimpleNotification(json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
 
     def __parse_notification_multiple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return MultipleNotification(json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable)
+        return MultipleNotification(json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))

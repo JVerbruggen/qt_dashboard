@@ -1,4 +1,5 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
+from collections.abc import Callable
 
 class SimpleRangeVariable(WatchableRangeVariable):
     """
@@ -28,12 +29,14 @@ class SimpleVariable(WatchableVariable):
     A simple implementation of the WatchableVariable 
     """
 
-    def __init__(self, default_value=0):
+    def __init__(self, default_value=0, callback: Callable[[], []]=None):
         self.value = default_value
+        self.callback = callback
 
     def get_value(self):
         return self.value
 
     def set_value(self, value):
         self.value = value
+        if self.callback is not None: self.callback()
 

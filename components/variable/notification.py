@@ -29,20 +29,17 @@ class NotificationList:
         """Get visible notifications"""
         raise NotImplementedError()
 
-    def set(self, iden: str, value: bool):
-        """Set a notification to a value for visibility"""
-        raise NotImplementedError()
-
 @dataclass
 class StaticNotificationList(NotificationList):
     """State of current notifications, used as reference"""
     notifications: dict[str, "Notification"]
     update_event: "NotificationUpdateEvent"
+    from_priority_level: int = 1
     __visible_notifications: dict[str, "Notification"] = field(default_factory=dict)
 
     def renew(self):
         self.update_event.unset()
-        self.__visible_notifications = {iden: n for iden,n in self.notifications.items() if n.is_visible()}
+        self.__visible_notifications = {iden: n for iden,n in self.notifications.items() if n.is_visible(self.from_priority_level)}
     
     def get_all(self):
         if self.update_event.isset():
@@ -50,16 +47,10 @@ class StaticNotificationList(NotificationList):
 
         return self.__visible_notifications
 
-    def set(self, iden, value):
-        self.notifications[iden].set_visible(value)
-
 @dataclass
 class Notification:
     """Notification with a message and a style"""
-    def is_visible(self):
-        raise NotImplementedError()
-
-    def set_visible(self, visible: bool):
+    def is_visible(self, from_priority_level: int):
         raise NotImplementedError()
 
     def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
@@ -71,15 +62,19 @@ class SimpleNotification(Notification):
     style: "NotificationStyle"
     update_event: "NotificationUpdateEvent"
     variable: WatchableVariable
+    priority: int = 1
+    __last_state: int = -1
 
-    def is_visible(self):
-        return self.variable.get_value() == 1
-
-    def set_visible(self, visible: bool):
-        self.variable.set_value(1 if visible else 0)
-        self.update_event.set()
+    def is_visible(self, from_priority_level):
+        return self.priority >= from_priority_level \
+            and self.variable.get_value() == 1
 
     def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
+        value = self.variable.get_value()
+        if value != self.__last_state:
+            self.__last_state = value
+            self.update_event.set()
+
         self.style.draw(self.message, painter, x, y, w, h)
 
 @dataclass
@@ -88,16 +83,19 @@ class MultipleNotification(Notification):
     style: "NotificationStyle"
     update_event: "NotificationUpdateEvent"
     variable: WatchableVariable
+    priority: int = 1
+    __last_state: int = -1
 
-    def is_visible(self):
-        return self.variable.get_value() == 1
-
-    def set_visible(self, visible: bool):
-        self.variable.set_value(1 if visible else 0)
-        self.update_event.set()
+    def is_visible(self, from_priority_level):
+        return self.priority >= from_priority_level
 
     def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
-        self.style.draw(self.messages[self.variable.get_value()], painter, x, y, w, h)
+        value = self.variable.get_value()
+        if value != self.__last_state:
+            self.__last_state = value
+            self.update_event.set()
+
+        self.style.draw(self.messages[value], painter, x, y, w, h)
 
 class NotificationStyle:
     """Interface for how a notification should be styled"""

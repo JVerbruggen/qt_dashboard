@@ -51,22 +51,10 @@ class DemoDashboardConfig(DashboardConfig):
         self.context = context
         self.incoming_bytes_factory = incoming_bytes_factory
 
-        # notification_configuration = {
-        #     "0000": ("This is a warning", NotificationStyles.WARNING()),
-        #     "0001": ("This is also a warning", NotificationStyles.CRUCIAL()),
-        # }
-        # self.notification_visibility_variables = {
-        #     iden: SimpleVariable(1) for iden, _ in notification_configuration.items()
-        # }
-
-        nue = NotificationUpdateEvent()
-        self.notifications_proxy = incoming_bytes_factory.parse_variables()
-        # notifications = {iden: SimpleNotification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
-        notifications = incoming_bytes_factory.get_notifications()
-        # notifications = {}
-        self.environment = {
-            self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
-        }
+        self.nue = NotificationUpdateEvent()
+        incoming_bytes_factory.set_update_event(self.nue)
+        self.notification_variables = incoming_bytes_factory.parse_variables()
+        self.notifications = incoming_bytes_factory.get_notifications()
 
         self.pages = {
             self.PAGE_IDEN_MAIN: self.__page_main(window),
@@ -101,7 +89,7 @@ class DemoDashboardConfig(DashboardConfig):
         notification_height = 70
 
         return [
-            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy, 
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=1), notification_paddingx, notification_paddingy, 
                 window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
         ]
 
@@ -139,14 +127,14 @@ class DemoDashboardConfig(DashboardConfig):
         #         7: None,
         #     }),
         # })
-        proxy = self.notifications_proxy
 
         # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
         # self.supervisor.register('0x69', proxy_variable, ByteMapper())
-        self.supervisor.register('0x420', proxy, ByteMapper())
-        # self.supervisor.start()
-
+        for iden, var in self.notification_variables.items():
+            self.supervisor.register(iden, var, ByteMapper())
+        self.supervisor.start()
+        
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
                 display_description="SPEED", display_unit="km/h", hint_range=13),
@@ -173,14 +161,5 @@ class DemoDashboardConfig(DashboardConfig):
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
             SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[7], window_width - 100, 300, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[6], window_width - 100, 350, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[5], window_width - 100, 400, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[4], window_width - 100, 450, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[3], window_width - 100, 500, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[2], window_width - 100, 550, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
-            # SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
-
-            NotificationBox(self.environment[self.NOTIFICATION_KEY], window_width-270, 100, 250, 400, 50)
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=100), window_width-270, 100, 250, 400, 50)
         ]
