@@ -16,13 +16,7 @@ class SerialSetup(Setup):
         readable = SerialReadable(self.SERIAL_DEVICE, self.BAUD)
         supervisor = SimpleComSupervisor(readable)
 
-        environment={
-            NOTIFICATION_KEY: StaticNotificationList(notifications=
-            [
-                Notification("This is a warning", NotificationStyles.WARNING()),
-                Notification("This is also a warning", NotificationStyles.CRUCIAL()),
-            ]),
-        }
+        environment={}
 
         config = DemoDashboardConfig(supervisor=supervisor, context=context, window=window, environment=environment)
 

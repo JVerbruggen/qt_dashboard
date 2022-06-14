@@ -3,10 +3,9 @@ from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
 from utils.com_supervisor.readable.mock import Mock
 from configuration.setup.setup import Setup
 from functools import partial
-from components.variable.notification import StaticNotificationList, Notification, NotificationStyles
+from components.variable.notification import StaticNotificationList, Notification, NotificationStyles, NotificationUpdateEvent
 from utils.context.context import Context
-
-NOTIFICATION_KEY = "notifications"
+from components.variable.simple_variable import SimpleVariable
 
 class DemoSetup(Setup):
     """
@@ -22,13 +21,7 @@ class DemoSetup(Setup):
             "0x420": partial(Mock.increment, 1),
         })
 
-        environment={
-            NOTIFICATION_KEY: StaticNotificationList(notifications=
-            [
-                Notification("This is a warning", NotificationStyles.WARNING()),
-                Notification("This is also a warning", NotificationStyles.CRUCIAL()),
-            ]),
-        }
+        environment={}
 
         supervisor = SimpleComSupervisor(readable)
         config = DemoDashboardConfig(context=context, supervisor=supervisor, window=window, environment=environment)

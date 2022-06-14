@@ -8,7 +8,7 @@ from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import StaticNotificationList, Notification, NotificationStyles
+from components.variable.notification import StaticNotificationList, Notification, NotificationStyles, NotificationUpdateEvent
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
@@ -28,9 +28,10 @@ class DemoDashboardConfig(DashboardConfig):
     Provides exact layout of all elements.
     """
 
+    NOTIFICATION_KEY = "notifications"
+
     PAGE_IDEN_MAIN = "main"
     PAGE_IDEN_MSG = "messages"
-
 
     GAUGE_OFFX_INNER = 125
     GAUGE_OFFX_OUTER = 380
@@ -45,9 +46,22 @@ class DemoDashboardConfig(DashboardConfig):
 
     def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), environment: {} = {}):	
         self.supervisor = supervisor
-        self.environment = environment
         self.window = window
         self.context = context
+
+        notification_configuration = {
+            "0000": ("This is a warning", NotificationStyles.WARNING()),
+            "0001": ("This is also a warning", NotificationStyles.CRUCIAL()),
+        }
+        self.notification_visibility_variables = {
+            iden: SimpleVariable(1) for iden, _ in notification_configuration.items()
+        }
+
+        nue = NotificationUpdateEvent()
+        notifications = [Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()]
+        self.environment = {
+            self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
+        }
 
         self.pages = {
             self.PAGE_IDEN_MAIN: self.__page_main(window),
@@ -59,6 +73,7 @@ class DemoDashboardConfig(DashboardConfig):
             "Messages": self.PAGE_IDEN_MSG,
         })
         self.__select_page(self.PAGE_IDEN_MAIN)
+
 
     def get_drawables(self):
         return self.pages[self.selected_page_iden] + [self.page_selector]
@@ -167,5 +182,5 @@ class DemoDashboardConfig(DashboardConfig):
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
             SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
 
-            NotificationBox(self.environment["notifications"], window_width-270, 100, 250, 400, 50)
+            NotificationBox(self.environment[self.NOTIFICATION_KEY], window_width-270, 100, 250, 400, 50)
         ]

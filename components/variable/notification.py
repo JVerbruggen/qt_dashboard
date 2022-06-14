@@ -3,26 +3,63 @@ import utils.drawing
 from utils.colors import Colors
 from utils.icons import Icons
 from utils.painter.painter import Painter
+from components.variable.watchable_variable import WatchableVariable
+
+class NotificationUpdateEvent:
+    def __init__(self):
+        self.state = True
+
+    def set(self):
+        self.state = True
+
+    def isset(self) -> bool:
+        return self.state
+
+    def unset(self):
+        self.state = False
 
 class NotificationList:
     """Interface of list with notifications"""
 
+    def renew(self) -> None:
+        """Renew notification list"""
+        raise NotImplementedError()
+
     def get_all(self) -> list["Notification"]:
+        """Get visible notifications"""
         raise NotImplementedError()
 
 @dataclass
 class StaticNotificationList(NotificationList):
     """State of current notifications, used as reference"""
-    notifications: list["Notification"] = field(default_factory=list)
+    notifications: list["Notification"]
+    update_event: "NotificationUpdateEvent"
+    __visible_notifications: list["Notification"] = field(default_factory=list)
 
+    def renew(self):
+        self.update_event.unset()
+        self.__visible_notifications = [n for n in self.notifications if n.is_visible()]
+    
     def get_all(self):
-        return self.notifications
+        if self.update_event.isset():
+            self.renew()
+
+        return self.__visible_notifications
 
 @dataclass
 class Notification:
     """Notification with a message and a style"""
     message: str
     style: "NotificationStyle"
+    update_event: "NotificationUpdateEvent"
+    variable: WatchableVariable
+
+    def is_visible(self):
+        return self.variable.get_value() == 1
+
+    def set_visible(self, visible: bool):
+        self.variable.set_value(1 if visible else 0)
+        self.update_event.set()
 
     def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
         self.style.draw(self.message, painter, x, y, w, h)
