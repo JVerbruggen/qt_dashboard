@@ -56,6 +56,17 @@ class StaticNotificationList(NotificationList):
 @dataclass
 class Notification:
     """Notification with a message and a style"""
+    def is_visible(self):
+        raise NotImplementedError()
+
+    def set_visible(self, visible: bool):
+        raise NotImplementedError()
+
+    def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
+        raise NotImplementedError()
+
+@dataclass
+class SimpleNotification(Notification):
     message: str
     style: "NotificationStyle"
     update_event: "NotificationUpdateEvent"

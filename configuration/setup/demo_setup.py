@@ -30,7 +30,7 @@ class DemoSetup(Setup):
             context=context, 
             supervisor=supervisor, 
             window=window, 
-            notification_variable_factory=notification_variable_factory,
+            incoming_bytes_factory=notification_variable_factory,
             environment=environment)
 
         return config

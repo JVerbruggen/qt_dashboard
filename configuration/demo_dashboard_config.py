@@ -8,7 +8,7 @@ from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import StaticNotificationList, Notification, NotificationStyles, NotificationUpdateEvent
+from components.variable.notification import StaticNotificationList, Notification, SimpleNotification, NotificationStyles, NotificationUpdateEvent
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
@@ -45,10 +45,11 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), notification_variable_factory: VariableFactory, environment: {} = {}):	
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), incoming_bytes_factory: VariableFactory, environment: {} = {}):	
         self.supervisor = supervisor
         self.window = window
         self.context = context
+        self.incoming_bytes_factory = incoming_bytes_factory
 
         # notification_configuration = {
         #     "0000": ("This is a warning", NotificationStyles.WARNING()),
@@ -59,9 +60,9 @@ class DemoDashboardConfig(DashboardConfig):
         # }
 
         nue = NotificationUpdateEvent()
-        # notifications = {iden: Notification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
+        # notifications = {iden: SimpleNotification(n_msg, n_style, nue, self.notification_visibility_variables[iden]) for iden, (n_msg, n_style) in notification_configuration.items()}
         # notifications = notification_variable_factory.get_variable()
-        notifications = {}
+        # notifications = {}
         self.environment = {
             self.NOTIFICATION_KEY: StaticNotificationList(notifications=notifications, update_event=nue)
         }
@@ -137,6 +138,7 @@ class DemoDashboardConfig(DashboardConfig):
                 7: None,
             }),
         })
+        proxy = self.incoming_bytes_factory.parse_variables()
 
         # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
         # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
