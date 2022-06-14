@@ -82,6 +82,23 @@ class SimpleNotification(Notification):
     def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
         self.style.draw(self.message, painter, x, y, w, h)
 
+@dataclass
+class MultipleNotification(Notification):
+    messages: list[str]
+    style: "NotificationStyle"
+    update_event: "NotificationUpdateEvent"
+    variable: WatchableVariable
+
+    def is_visible(self):
+        return self.variable.get_value() == 1
+
+    def set_visible(self, visible: bool):
+        self.variable.set_value(1 if visible else 0)
+        self.update_event.set()
+
+    def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
+        self.style.draw(self.messages[self.variable.get_value()], painter, x, y, w, h)
+
 class NotificationStyle:
     """Interface for how a notification should be styled"""
     ICON_SIZE = 30
@@ -132,3 +149,10 @@ class NotificationStyles:
     WARNING_BATTERY = lambda : NotificationStyle(Icons.BATTERY, Colors.ORANGE)
     CRUCIAL = lambda : NotificationStyle(Icons.WARNING, Colors.RED)
     INFO = lambda : NotificationStyle(Icons.UNKNOWN, Colors.GREEN)
+
+    def from_iden(iden: str):
+        if iden == "info": return NotificationStyles.INFO()
+        elif iden == "warning": return NotificationStyles.WARNING()
+        elif iden == "warning-battery": return NotificationStyles.WARNING_BATTERY()
+        elif iden == "error": return NotificationStyles.ERROR()
+        elif iden == "crucial": return NotificationStyles.CRUCIAL()

@@ -5,12 +5,15 @@ from components.variable.factory.variable_factory import VariableFactory
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
+from components.variable.notification import Notification, SimpleNotification, NotificationStyles, NotificationUpdateEvent, MultipleNotification
 
 @dataclass
 class JsonVariableFactory(VariableFactory):
     notification_config: str = "data/notifications.json"
     byte_config: str = "data/input-byte-config.json"
     variable_pool: dict[str, "WatchableVariable"] = field(default_factory=dict)
+    notifications: dict[str, "Notification"] = field(default_factory=dict)
+    nue: NotificationUpdateEvent = NotificationUpdateEvent()
 
     def parse_variables(self):
         json_notification_config = self.__get_json_contents(self.notification_config)
@@ -20,7 +23,7 @@ class JsonVariableFactory(VariableFactory):
         return variable
 
     def get_notifications(self):
-        pass
+        return self.notifications
 
     def __get_json_contents(self, filename):
         with open(filename, 'r') as f:
@@ -68,10 +71,23 @@ class JsonVariableFactory(VariableFactory):
         if iden not in notifications: raise ValueError(f"Notification {iden} not found in notifications.json")
         spec = notifications[iden]
         s_type = spec["type"]
-
-        if s_type == "simple" or s_type == "multiple": return self.__variable_parse_simple(spec)
+        
+        if s_type == "simple":
+            var = self.__variable_parse_simple(spec)
+            self.notifications[iden] = self.__parse_notification_simple(spec, var)
+            return var
+        elif s_type == "multiple":
+            var = self.__variable_parse_simple(spec)
+            self.notifications[iden] = self.__parse_notification_multiple(spec, var)
+            return var
 
         raise ValueError(f"Notification type {s_type} not supported")
 
     def __variable_parse_simple(self, json_node) -> "WatchableVariable":
         return SimpleVariable()
+
+    def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
+        return SimpleNotification(json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable)
+
+    def __parse_notification_multiple(self, json_node, variable: "WatchableVariable") -> "Notification":
+        return MultipleNotification(json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable)
