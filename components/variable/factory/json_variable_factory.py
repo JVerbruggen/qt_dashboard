@@ -93,7 +93,7 @@ class JsonVariableFactory(VariableFactory):
         return SimpleVariable(callback=self.nue.set)
 
     def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return SimpleNotification(json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
+        return SimpleNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
 
     def __parse_notification_multiple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return MultipleNotification(json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
+        return MultipleNotification(json_node["title"], json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))

@@ -7,6 +7,7 @@ class Painter:
     DEFAULT_ROUNDED_WIDTH = 7
     DEFAULT_FONT = "TimesMD"
     FONT_SM = "TimesSM"
+    FONT_SM_BOLD = "TimesSMBold"
 
     def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None):
         """

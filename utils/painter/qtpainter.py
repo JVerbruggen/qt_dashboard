@@ -84,9 +84,13 @@ class HMIQtPainter(Painter):
         display_hintvalues_font.setBold(True)
         display_hintvalues_font.setLetterSpacing(QtGui.QFont.SpacingType.AbsoluteSpacing, 1)
 
+        times_sm_bold = QtGui.QFont("Times", 12)
+        times_sm_bold.setBold(True)
+
         return {
             "TimesMD": QtGui.QFont("Times", 13),
             "TimesSM": QtGui.QFont("Times", 12),
+            "TimesSMBold" : times_sm_bold,
             "GaugeLG": display_description_font,
             "GaugeMD": display_value_font,
             "GaugeSM": display_hintvalues_font,

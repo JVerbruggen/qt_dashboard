@@ -15,11 +15,11 @@ class DemoSetup(Setup):
     """
 
     def create(self, context: Context, window: (int, int)):
-        readable = Mock(interval=1, policy={
+        readable = Mock(interval=0.3, policy={
             # "0x18": Mock.random_first_byte,
             # "0x687": Mock.all_random_bytes,
             # "0x69": partial(Mock.take_from, ["00 00 00 00 00 00 00 00", "01 00 00 00 00 00 00 00"]),
-            "0x684": partial(Mock.increment, 1, ["01" if i==0 else "00" for i in range(8)]),
+            "0x684": partial(Mock.increment, 3, ["01" if i==0 else "00" for i in range(8)]),
         })
 
         environment={}
