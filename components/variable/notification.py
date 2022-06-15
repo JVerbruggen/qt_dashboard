@@ -117,23 +117,13 @@ class NotificationStyle:
 
         self._draw_box(painter, x, y, w, h)
         self._draw_icon(painter, x, y)
-        self.__draw_title(title, painter, x, y-self.TEXT_VOFFSET, w, h)
+        self._draw_text(title, painter, x, y-self.TEXT_VOFFSET, w, h, font=Painter.FONT_SM_BOLD)
         self._draw_text(text, painter, x, y+self.TEXT_VOFFSET, w, h)
 
     def _draw_box(self, painter: Painter, x, y, w, h):
         painter.draw_box(x, y, w, h, self.color)
 
-    def __draw_title(self, title: str, painter: Painter, x, y, w, h):
-        painter.draw_text_at( 
-            x+NotificationStyle.ICON_SIZE+NotificationStyle.ICON_MARGIN+NotificationStyle.TEXT_HMARGIN, 
-            y+NotificationStyle.TEXT_VMARGIN, 
-            w-NotificationStyle.ICON_SIZE-NotificationStyle.ICON_MARGIN-NotificationStyle.TEXT_HMARGIN, 
-            h,
-            self.color,
-            title,
-            Painter.FONT_SM_BOLD)
-
-    def _draw_text(self, text, painter: Painter, x, y, w, h):
+    def _draw_text(self, text, painter: Painter, x, y, w, h, font=Painter.FONT_SM):
         painter.draw_text_at( 
             x+NotificationStyle.ICON_SIZE+NotificationStyle.ICON_MARGIN+NotificationStyle.TEXT_HMARGIN, 
             y+NotificationStyle.TEXT_VMARGIN, 
@@ -141,7 +131,7 @@ class NotificationStyle:
             h,
             self.color,
             text,
-            Painter.FONT_SM)
+            font)
     
     def _draw_icon(self, painter: Painter, x, y):
         painter.draw_svg(self.icon_img, x+NotificationStyle.ICON_MARGIN, y+NotificationStyle.ICON_MARGIN, 
