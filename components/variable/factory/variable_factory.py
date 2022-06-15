@@ -2,6 +2,10 @@ from components.variable.notification import Notification, NotificationUpdateEve
 from components.variable.watchable_variable import WatchableVariable
 
 class VariableFactory:
+    """
+    Create variables for display of notifications.
+    """
+
     def parse_variables(self) -> dict[str, WatchableVariable]:
         raise NotImplementedError()
     

@@ -12,7 +12,7 @@ from components.variable.notification import StaticNotificationList, Notificatio
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_processor import LittleEndianProcessor
+from components.variable.processor.little_endian_processor import LittleEndianByteProcessor
 from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
@@ -108,29 +108,6 @@ class DemoDashboardConfig(DashboardConfig):
         variable_on = SimpleVariable(1)
         variable_onoff_2000 = IntervalOnOffVariable(self.context, 2000)
 
-        proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
-        proxy_variable = ProxyVariable({0: proxied_variable})
-
-
-        # proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
-        # proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
-
-        # proxy = ProxyVariableWithState(state_byte_index=0, states={
-        #     b'00': ProxyVariable({
-        #         0: None,
-        #         1: proxy_cont_tx_status_stat,
-        #         2: None,
-        #         3: None,
-        #         4: None,
-        #         5: None,
-        #         6: None,
-        #         7: None,
-        #     }),
-        # })
-
-        # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
-        # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
-        # self.supervisor.register('0x69', proxy_variable, ByteMapper())
         for iden, var in self.notification_variables.items():
             self.supervisor.register(iden, var, ByteMapper())
         self.supervisor.start()
@@ -157,7 +134,6 @@ class DemoDashboardConfig(DashboardConfig):
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
                 display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
-            SvgIndicator(Icons.LEFT_ARROW, proxied_variable, 150, 150, 100, Colors.GREEN),
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
             SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 

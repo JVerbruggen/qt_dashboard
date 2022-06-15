@@ -3,6 +3,8 @@ from components.variable.simple_variable import SimpleVariable
 from components.variable.accumulated_variable import AccumulatedVariable
 from components.variable.collector.bit_collector import BitCollector
 from components.variable.processor.bit_processor import BigEndianBitProcessor
+from components.variable.factory.json_variable_factory import JsonVariableFactory
+from components.variable.notification import NotificationUpdateEvent
 
 def test_var_case1():
     configuration = { i:var for i,var in enumerate(SimpleVariable(0) for _ in range(8)) }
@@ -49,3 +51,38 @@ def test_var_multiple_case2():
 
     values = [v.get_value() for _,v in configuration.items()]
     assert values == [0,0,0,0,2,2,0,0]
+
+def test_from_json_1():
+    nue = NotificationUpdateEvent()
+    factory = JsonVariableFactory()
+    factory.set_update_event(nue)
+    variables = factory.parse_variables()
+    notifications = factory.get_notifications()
+
+    assert "0x684" in variables
+
+    root = variables["0x684"]
+    proxy = root.states[b"01"]
+    bit_proxy = proxy.configuration[1]
+    variables = [v for _,v in bit_proxy.configuration.items()]
+    values = [v.get_value() for v in variables]
+    assert values == [0,0,0,0,0,0,0]
+
+    variables[0].set_value(1)
+    values = [v.get_value() for v in variables]
+    assert values == [1,0,0,0,0,0,0]
+
+    variables[3].set_value(1)
+    values = [v.get_value() for v in variables]
+    assert values == [1,0,0,0,0,0,0]
+    variables[4].set_value(0)
+    values = [v.get_value() for v in variables]
+    assert values == [1,0,0,1,1,0,0]
+
+    variables[3].set_value(1)
+    values = [v.get_value() for v in variables]
+    assert values == [1,0,0,1,1,0,0]
+    variables[4].set_value(1)
+    values = [v.get_value() for v in variables]
+    assert values == [1,0,0,3,3,0,0]
+    

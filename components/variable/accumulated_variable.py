@@ -8,17 +8,16 @@ class AccumulatedVariable(WatchableVariable):
     Accumulates set values to one result.
     Uses a processor to process multiple values.
     """
-    value: int
     collector: Collector
 
     def get_value(self):
-        return self.value
+        return self.collector.get_value()
 
     def set_value(self, value: int):
         """ Value is a byte """
         result = self.collector.add_to_buffer(value)
+        print("Adding to buffer", value, result)
         if result is not None: 
-            self.value = result
             print("Accumulated", result)
         
 

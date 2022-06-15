@@ -6,6 +6,11 @@ from utils.painter.painter import Painter
 from components.variable.watchable_variable import WatchableVariable
 
 class NotificationUpdateEvent:
+    """
+    Used for redrawing all visible notifications (for optimization).
+    Is usually set whenever a variable updates, so that the list knows the visible notifications
+    should be recalculated.
+    """
     def __init__(self):
         self.state = True
 
@@ -19,7 +24,9 @@ class NotificationUpdateEvent:
         self.state = False
 
 class NotificationList:
-    """Interface of list with notifications"""
+    """
+    Interface of list with notifications.
+    """
 
     def renew(self) -> None:
         """Renew notification list"""
@@ -31,7 +38,9 @@ class NotificationList:
 
 @dataclass
 class StaticNotificationList(NotificationList):
-    """State of current notifications, used as reference"""
+    """
+    State of current notifications, used as reference.
+    """
     notifications: dict[str, "Notification"]
     update_event: "NotificationUpdateEvent"
     from_priority_level: int = 1
@@ -58,6 +67,9 @@ class Notification:
 
 @dataclass
 class SimpleNotification(Notification):
+    """
+    Simple notification that can be visible or not.
+    """
     title: str
     message: str
     style: "NotificationStyle"
@@ -80,6 +92,10 @@ class SimpleNotification(Notification):
 
 @dataclass
 class MultipleNotification(Notification):
+    """
+    Notification that is always displayed. Displayed text is determined by variable.
+    I.e. if variable == 0, displayed message will be messages[0].
+    """
     title: str
     messages: list[str]
     style: "NotificationStyle"
@@ -100,7 +116,9 @@ class MultipleNotification(Notification):
         self.style.draw(self.title, self.messages[value], painter, x, y, w, h)
 
 class NotificationStyle:
-    """Interface for how a notification should be styled"""
+    """
+    Interface for how a notification should be styled.
+    """
     ICON_SIZE = 30
     ICON_MARGIN = 10
     TEXT_HMARGIN = 10
@@ -141,6 +159,9 @@ class NotificationStyle:
         self.icon_img = painter.get_image_from(self.icon_str)
 
 class NotificationStyles:
+    """
+    Preset NotificationStyle objects.
+    """
     ERROR = lambda : NotificationStyle(Icons.WARNING, Colors.RED)
     WARNING = lambda : NotificationStyle(Icons.WARNING, Colors.ORANGE)
     WARNING_BATTERY = lambda : NotificationStyle(Icons.BATTERY, Colors.ORANGE)

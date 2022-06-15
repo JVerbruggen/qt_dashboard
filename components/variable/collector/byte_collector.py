@@ -4,6 +4,10 @@ from components.variable.collector.collector import Collector
 
 @dataclass
 class ByteCollector(Collector):
+    """
+    Collects x bytes, adds them to a buffer, 
+    and passes it to a processor when buffer is full.
+    """
     processor: ByteProcessor
     byte_count: int = 0
     byte_count_state: int = 0
@@ -18,7 +22,7 @@ class ByteCollector(Collector):
         self.byte_count_state = len(byte_buffer)
         
         if self.byte_count_state >= self.byte_count:
-            result = processor.process(self.byte_buffer)
+            result = self.processor.process(self.byte_buffer)
             self.__reset()
             return result
         
