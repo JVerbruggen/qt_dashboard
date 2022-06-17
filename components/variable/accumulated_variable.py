@@ -16,7 +16,6 @@ class AccumulatedVariable(WatchableVariable):
     def set_value(self, value: int):
         """ Value is a byte """
         result = self.collector.add_to_buffer(value)
-        print("Adding to buffer", value, result)
         if result is not None: 
             print("Accumulated", result)
         

@@ -30,7 +30,7 @@ def test_var_case2():
         else: assert val == 0
 
 def test_var_multiple_case1():
-    mul_var = AccumulatedVariable(0, BitCollector(bit_count=2, processor=BigEndianBitProcessor()))
+    mul_var = AccumulatedVariable(BitCollector(bit_count=2, processor=BigEndianBitProcessor()))
     configuration = { i:var for i,var in enumerate(mul_var if i == 6 or i == 7 else SimpleVariable(0) for i in range(8)) }
     proxy = Proxy8BitVariable(configuration)
 
@@ -43,7 +43,7 @@ def test_var_multiple_case1():
     assert values == [0,0,0,0,0,0,2,2]
     
 def test_var_multiple_case2():
-    mul_var = AccumulatedVariable(0, BitCollector(bit_count=2, processor=BigEndianBitProcessor()))
+    mul_var = AccumulatedVariable(BitCollector(bit_count=2, processor=BigEndianBitProcessor()))
     configuration = { i:var for i,var in enumerate(mul_var if i == 4 or i == 5 else SimpleVariable(0) for i in range(8)) }
     proxy = Proxy8BitVariable(configuration)
 

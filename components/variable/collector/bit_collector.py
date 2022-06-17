@@ -12,8 +12,7 @@ class BitCollector(Collector):
     bit_count: int = 0
     bit_count_state: int = 0
     bit_buffer: list[int] = field(default_factory=list)
-    bit_result: list[int] = field(default_factory=list)
-    return_pointer = 0
+    result: int = 0
 
     def __reset(self):
         self.bit_buffer = []
@@ -21,25 +20,17 @@ class BitCollector(Collector):
         self.return_pointer = 0
 
     def get_value(self) -> int:
-        print(self.return_pointer)
-
-        if self.return_pointer >= len(self.bit_result): return 0
-        v = self.bit_result[self.return_pointer]
-        self.return_pointer = (self.return_pointer + 1) % self.bit_count
-        print("new return pointer", self.return_pointer)
-
-        return v
+        return self.result
     
     def add_to_buffer(self, value) -> int:
         if self.bit_count_state >= self.bit_count:
             self.__reset()
 
         self.bit_buffer += [value]
-        print(f"Collected bit {self.bit_count_state} of {self.bit_count}")
         self.bit_count_state += 1
         
         if self.bit_count_state >= self.bit_count:
-            result = self.processor.process(self.bit_buffer)
-            self.bit_result = self.bit_buffer
+            self.result = self.processor.process(self.bit_buffer)
+            return self.result
         
         return None

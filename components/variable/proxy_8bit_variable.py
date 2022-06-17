@@ -15,7 +15,7 @@ class Proxy8BitVariable(WatchableVariable):
     def set_value(self, value: int):
         """ Value is a byte """
         bits = byte_to_bit_string(value)
-        # print("Setting variables to", bits)
+        print("Setting variables to", bits)
         for i, v in enumerate(bits[::-1]):
             if i not in self.configuration: continue
 
