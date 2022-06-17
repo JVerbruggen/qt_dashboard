@@ -17,7 +17,7 @@ from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
-from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper
+from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper, ToIntegerMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
 from utils.context.context import Context
@@ -110,6 +110,9 @@ class DemoDashboardConfig(DashboardConfig):
 
         for iden, var in self.notification_variables.items():
             self.supervisor.register(iden, var, ByteMapper())
+
+        self.supervisor.register("0x684", variable_speed, ToIntegerMapper(1))
+        
         self.supervisor.start()
         
         return [

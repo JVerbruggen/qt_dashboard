@@ -1,5 +1,6 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
 from collections.abc import Callable
+from dataclasses import dataclass, field
 
 class SimpleRangeVariable(WatchableRangeVariable):
     """
@@ -39,4 +40,14 @@ class SimpleVariable(WatchableVariable):
     def set_value(self, value):
         self.value = value
         if self.callback is not None: self.callback()
+    
+class WrappedVariable(WatchableVariable):
+    """
+    A variable that sets all its children.
+    Does not support get_value().
+    """
 
+    children: list[WatchableVariable] = field(default_factory=list)
+
+    def set_value(self, value):
+        [c.set_value(value) for c in self.children]
