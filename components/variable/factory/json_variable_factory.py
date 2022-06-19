@@ -8,7 +8,7 @@ from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable, MapperVariable
 from components.variable.accumulated_variable import AccumulatedVariable
-from components.variable.collector.bit_collector import BitCollector
+from components.variable.collector.bit_collector import BitCollector, InverseOrderBitCollector
 from components.variable.processor.bit_processor import BigEndianBitProcessor
 from components.variable.notification import Notification, SimpleNotification, NotificationStyles, \
     NotificationUpdateEvent, MultipleNotification, NumberFormatNotification
@@ -118,7 +118,7 @@ class JsonVariableFactory(VariableFactory):
 
         return self.__get_var_from_pool(iden, lambda : 
             MapperVariable(
-                AccumulatedVariable(BitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
                 offset, 
                 step
             )
@@ -132,7 +132,7 @@ class JsonVariableFactory(VariableFactory):
         return self.__get_var_from_pool(iden, lambda : 
             MapperVariable(
                 TwosComplementMapper(
-                    AccumulatedVariable(BitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                    AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
                     from_number=2**(bits-1), add=-(2**bits)
                 ), 
                 offset,
