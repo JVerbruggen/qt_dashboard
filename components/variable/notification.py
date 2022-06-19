@@ -115,6 +115,31 @@ class MultipleNotification(Notification):
 
         self.style.draw(self.title, self.messages[value], painter, x, y, w, h)
 
+@dataclass
+class NumberFormatNotification(Notification):
+    """
+    Notification that shows the variables number in a formatted way.
+    """
+    title: str
+    message: str
+    style: "NotificationStyle"
+    update_event: "NotificationUpdateEvent"
+    variable: WatchableVariable
+    priority: int = 1
+    __last_state: int = -1
+    decimals: int = 3
+
+    def is_visible(self, from_priority_level):
+        return self.priority >= from_priority_level
+
+    def draw(self, painter: Painter, x:int, y:int, w:int, h:int):
+        value = self.variable.get_value()
+        if value != self.__last_state:
+            self.__last_state = value
+            self.update_event.set()
+        
+        self.style.draw(self.title, self.message.replace("{}", ("{:." + str(self.decimals) + "f}").format(value)), painter, x, y, w, h)
+
 class NotificationStyle:
     """
     Interface for how a notification should be styled.

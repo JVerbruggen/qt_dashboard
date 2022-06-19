@@ -40,7 +40,8 @@ class SimpleVariable(WatchableVariable):
     def set_value(self, value):
         self.value = value
         if self.callback is not None: self.callback()
-    
+
+@dataclass
 class WrappedVariable(WatchableVariable):
     """
     A variable that sets all its children.
@@ -51,3 +52,20 @@ class WrappedVariable(WatchableVariable):
 
     def set_value(self, value):
         [c.set_value(value) for c in self.children]
+
+@dataclass
+class MapperVariable(WatchableVariable):
+    """
+    A variable that maps its underlying child to different values.
+    """
+
+    child: WatchableVariable
+    offset_from: float
+    step: float
+
+    def set_value(self, value):
+        self.child.set_value(value)
+
+    def get_value(self):
+        val = self.child.get_value() * self.step + self.offset_from
+        return val

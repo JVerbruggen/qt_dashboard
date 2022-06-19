@@ -13,3 +13,18 @@ class OrVariable(WatchableVariable):
         for child in self.children:
             if child.get_value() == 1: return 1
         return 0
+
+@dataclass
+class TwosComplementMapper(WatchableVariable):
+    child: WatchableVariable
+    from_number: int
+    add: int
+
+    def set_value(self, value):
+        self.child.set_value(value)
+    
+    def get_value(self):
+        v = self.child.get_value()
+        if v >= self.from_number:
+            v += self.add
+        return v

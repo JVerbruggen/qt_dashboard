@@ -69,23 +69,15 @@
 
         "6840230": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - WARNC:", "message":"Task timeout" },
         
-        "68403107": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - SOC:", "message":"" },
-        "68403207": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - VMINM:", "message":"" },
-        "68403307": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - VMINL:", "message":"" },
-        "68403407": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - VMAXM:", "message":"" },
-        "68403507": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - VMAXL:", "message":"" },
-        "68403607": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - TMIN:", "message":"" },
-        "68403707": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - TMAX:", "message":"" },
+        "68403107": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - SOC:", "bits":8, "offset": 0, "step":0.5, "message":"{}%" },
+        "684032307": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - VMIN:", "bits":16, "step":0.1, "message":"{}mV" },
+        "684034507": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - VMAX:", "bits":16, "step":0.1, "message":"{}mV" },
+        "68403607": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - TMIN:", "bits":8, "offset": -40, "step":1, "message":"{} deg C" },
+        "68403707": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - TMAX:", "bits":8, "offset": -40, "step":1, "message":"{} deg C" },
 
-        "68404107": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - DCTOTM:", "message":"" },
-        "68404207": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - DCTOT:", "message":"" },
-        "68404307": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - DCTOT:", "message":"" },
-        "68404407": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - DCTOTL:", "message":"" },
+        "684041407": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - DCTOT:", "bits":32, "step":0.1, "message":"{}mV" },
 
-        "68405107": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CURRM:", "message":"" },
-        "68405207": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CURR:", "message":"" },
-        "68405307": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CURR:", "message":"" },
-        "68405407": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CURRL:", "message":"" },
+        "684051407": { "type":"number-sign-twos", "priority": 1, "style":"info", "title": "Battery - CURR:", "bits":32, "step":0.001, "message":"{}A" },
 
         "6841010": { "type":"multiple", "priority": 1, "style":"warning", "title": "Battery - CHRGA:", 
             "messages": ["Charging not allowed", "Charging is allowed"]},

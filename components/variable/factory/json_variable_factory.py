@@ -3,13 +3,15 @@ import json
 from collections.abc import Callable
 from components.variable.watchable_variable import WatchableVariable
 from components.variable.factory.variable_factory import VariableFactory
+from components.variable.logic_variables import TwosComplementMapper
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
-from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
+from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable, MapperVariable
 from components.variable.accumulated_variable import AccumulatedVariable
 from components.variable.collector.bit_collector import BitCollector
 from components.variable.processor.bit_processor import BigEndianBitProcessor
-from components.variable.notification import Notification, SimpleNotification, NotificationStyles, NotificationUpdateEvent, MultipleNotification
+from components.variable.notification import Notification, SimpleNotification, NotificationStyles, \
+    NotificationUpdateEvent, MultipleNotification, NumberFormatNotification
 
 @dataclass
 class JsonVariableFactory(VariableFactory):
@@ -90,20 +92,72 @@ class JsonVariableFactory(VariableFactory):
             var = self.__variable_parse_accumulate_bits(spec, iden)
             self.notifications[iden] = self.__parse_notification_multiple(spec, var)
             return var
+        elif s_type == "number-unsign":
+            var = self.__variable_parse_number_unsigned(spec, iden)
+            self.notifications[iden] = self.__parse_notification_numberformat(spec, var)
+            return var
+        elif s_type == "number-sign-twos":
+            var = self.__variable_parse_number_signed_twos(spec, iden)
+            self.notifications[iden] = self.__parse_notification_numberformat(spec, var)
+            return var
 
         raise ValueError(f"Notification type {s_type} not supported")
 
     def __variable_parse_simple(self, json_node) -> "WatchableVariable":
         return SimpleVariable(callback=self.nue.set)
 
-    def __variable_parse_accumulate_bits(self, json_node, iden) -> "WatchableVariable":
-        return self.__get_var_from_pool(iden, lambda : AccumulatedVariable(BitCollector(BigEndianBitProcessor(), 2)))
+    def __variable_parse_accumulate_bits(self, json_node, iden, size: int=2) -> "WatchableVariable":
+        return self.__get_var_from_pool(iden, lambda : 
+            AccumulatedVariable(BitCollector(BigEndianBitProcessor(), size), callback=self.nue.set)
+        )
+    
+    def __variable_parse_number_unsigned(self, json_node, iden) -> "WatchableVariable":
+        bits = json_node["bits"]
+        offset = 0 if "offset" not in json_node else json_node["offset"]
+        step = 1 if "step" not in json_node else json_node["step"]
+
+        return self.__get_var_from_pool(iden, lambda : 
+            MapperVariable(
+                AccumulatedVariable(BitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                offset, 
+                step
+            )
+        )
+
+    def __variable_parse_number_signed_twos(self, json_node, iden) -> "WatchableVariable":
+        bits = json_node["bits"]
+        offset = 0 if "offset" not in json_node else json_node["offset"]
+        step = 1 if "step" not in json_node else json_node["step"]
+
+        return self.__get_var_from_pool(iden, lambda : 
+            MapperVariable(
+                TwosComplementMapper(
+                    AccumulatedVariable(BitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                    from_number=2**(bits-1), add=-(2**bits)
+                ), 
+                offset,
+                step
+            )
+        )
 
     def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return SimpleNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
+        return SimpleNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]), 
+            self.nue, variable, int(json_node["priority"]))
 
     def __parse_notification_multiple(self, json_node, variable: "WatchableVariable") -> "Notification":
-        return MultipleNotification(json_node["title"], json_node["messages"], NotificationStyles.from_iden(json_node["style"]), self.nue, variable, int(json_node["priority"]))
+        return MultipleNotification(json_node["title"], json_node["messages"], NotificationStyles.from_iden(json_node["style"]), 
+            self.nue, variable, int(json_node["priority"]))
+    
+    def __parse_notification_numberformat(self, json_node, variable: "WatchableVariable") -> "Notification":
+        step = 1 if "step" not in json_node else json_node["step"]
+        step_spl = str(step).split(".")
+        decimals = 0
+        if len(step_spl) > 1: 
+            print(step_spl)
+            decimals = step_spl[1]
+        
+        return NumberFormatNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]),
+            self.nue, variable, int(json_node["priority"]), decimals=decimals)
 
     def __get_var_from_pool(self, iden: str, else_new: Callable[[], "WatchableVariable"]) -> "WatchableVariable":
         if iden not in self.variable_pool:
