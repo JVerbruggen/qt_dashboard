@@ -74,7 +74,7 @@ class DemoDashboardConfig(DashboardConfig):
         hit_button = self.page_selector.hits(x, y)
         if hit_button is None: return
         self.__select_page(hit_button.iden)
-
+    
     def __select_page(self, iden: str):
         if iden not in self.pages: return
 
@@ -96,7 +96,6 @@ class DemoDashboardConfig(DashboardConfig):
     def __page_main(self, window):
         window_width, window_height = window
 
-        variable_speed = SimpleRangeVariable(0, 0, 240)
         variable_dummy = SimpleRangeVariable(40, 0, 100)
         variable_motorspeed = DemoLoopingVariable(self.context, 0, 0, 60)
         variable_temp = DemoLoopingVariable(self.context, 50, 50, 240)
@@ -111,7 +110,7 @@ class DemoDashboardConfig(DashboardConfig):
         for iden, var in self.notification_variables.items():
             self.supervisor.register(iden, var, ByteMapper())
 
-        self.supervisor.register("0x684", variable_speed, ToIntegerMapper(1))
+        variable_speed = self.incoming_bytes_factory.get_variable("684032307")
         
         self.supervisor.start()
         

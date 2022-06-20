@@ -12,3 +12,6 @@ class ComSupervisor():
 
     def start(self):
         raise NotImplementedError()
+    
+    def get_variable(self, identifier: str) -> WatchableVariable:
+        raise NotImplementedError()

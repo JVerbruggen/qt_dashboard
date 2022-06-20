@@ -14,3 +14,6 @@ class VariableFactory:
 
     def set_update_event(self, nue: NotificationUpdateEvent):
         raise NotImplementedError()
+    
+    def get_variable(self, identifier: str) -> WatchableVariable:
+        raise NotImplementedError()

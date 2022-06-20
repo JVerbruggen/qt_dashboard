@@ -54,7 +54,7 @@ class WrappedVariable(WatchableVariable):
         [c.set_value(value) for c in self.children]
 
 @dataclass
-class MapperVariable(WatchableVariable):
+class MapperVariable(WatchableRangeVariable):
     """
     A variable that maps its underlying child to different values.
     """
@@ -62,6 +62,7 @@ class MapperVariable(WatchableVariable):
     child: WatchableVariable
     offset_from: float
     step: float
+    max_val: float
 
     def set_value(self, value):
         self.child.set_value(value)
@@ -69,3 +70,9 @@ class MapperVariable(WatchableVariable):
     def get_value(self):
         val = self.child.get_value() * self.step + self.offset_from
         return val
+    
+    def get_lower_value(self):
+        return self.offset_from
+
+    def get_upper_value(self):
+        return self.max_val

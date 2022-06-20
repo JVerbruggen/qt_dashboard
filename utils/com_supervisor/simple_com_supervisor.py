@@ -35,6 +35,10 @@ class SimpleComSupervisor(ComSupervisor):
             sys.exit()
         except (SystemExit):
             stop.set()
+    
+    def get_variable(self, identifier: str):
+        if identifier not in self.mappings: return None
+        return self.mappings[identifier][0]
 
     def __update_variable(self, identifier, value):
         if identifier not in self.mappings: return
