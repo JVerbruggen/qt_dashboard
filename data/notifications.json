@@ -82,13 +82,33 @@
         "6841010": { "type":"multiple", "priority": 1, "style":"warning", "title": "Battery - CHRGA:", 
             "messages": ["Charging not allowed", "Charging is allowed"]},
         
-        
         "6841020": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"In charging mode" },
         "6841021": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Charging Active" },
         "6841022": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Charging Done" },
         "6841024": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"In balancing mode" },
         "6841025": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Balancing active" },
-        "6841026": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Balancing done" }
-    
+        "6841026": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Balancing done" },
+
+        "6000317": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Input Current:", "bits":32, "offset": 0, "step":1, "message":"{}A" },
+        "6004717": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Input Voltage:", "bits":32, "offset": 0, "step":1, "message":"{}V" },
+
+        "6010317": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Output Current:", "bits":32, "offset": 0, "step":1, "message":"{}A" },
+        "6014717": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Output Voltage:", "bits":32, "offset": 0, "step":1, "message":"{}V" },
+
+        "6020317": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Controller Temp:", "bits":32, "offset": 0, "step":1, "message":"{} deg C" },
+        "6024717": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Mosfet Temp:", "bits":32, "offset": 0, "step":1, "message":"{} deg C" },
+
+        "60300": { "type":"multiple", "priority": 1, "style":"warning", "title": "MPPT - Mode:", "messages":["Standby", "Active"] },
+        "60301": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"12V Undervoltage" },
+        "60302": { "type":"simple", "priority": 100, "style":"error", "title": "MPPT:", "message":"Canbus error" },
+        "60303": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"Input undervoltage" },
+        "60304": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"Mosfet temperature limit" },
+        "60305": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"Output voltage limit" },
+        "60306": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"Input current limit" },
+        "60307": { "type":"simple", "priority": 1, "style":"warning", "title": "MPPT:", "message":"PWM limit" },
+        "603107": { "type":"number-unsign", "priority": 1, "style":"info", "title": "MPPT - Firmware version:", "bits":8, "offset": 0, "step":1, "message":"{}" },
+        "6032307": { "type":"number-unsign", "priority": 1, "style":"info", "title": "MPPT - Serial Number:", "bits":16, "offset": 0, "step":1, "message":"{}" },
+        "6034707": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - 12V Can Bus Voltage", "bits":32, "offset": 0, "step":1, "message":"{}" }
+
     }
 }

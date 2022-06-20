@@ -13,4 +13,3 @@ class ProcessedVariable(WatchableVariable):
 
     def set_value(self, value: int):
         self.value = self.processor.process(value)
-        print("Processed", value, "to", self.value)

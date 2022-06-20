@@ -9,7 +9,7 @@ from components.variable.proxy_8bit_variable import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable, MapperVariable
 from components.variable.accumulated_variable import AccumulatedVariable
 from components.variable.collector.bit_collector import BitCollector, InverseOrderBitCollector
-from components.variable.processor.bit_processor import BigEndianBitProcessor
+from components.variable.processor.bit_processor import BigEndianBitProcessor, FloatProcessor
 from components.variable.notification import Notification, SimpleNotification, NotificationStyles, \
     NotificationUpdateEvent, MultipleNotification, NumberFormatNotification
 
@@ -100,6 +100,10 @@ class JsonVariableFactory(VariableFactory):
             var = self.__variable_parse_number_signed_twos(spec, iden)
             self.notifications[iden] = self.__parse_notification_numberformat(spec, var)
             return var
+        elif s_type == "float":
+            var = self.__variable_parse_float(spec, iden)
+            self.notifications[iden] = self.__parse_notification_numberformat(spec, var)
+            return var
 
         raise ValueError(f"Notification type {s_type} not supported")
 
@@ -139,6 +143,13 @@ class JsonVariableFactory(VariableFactory):
                 step
             )
         )
+    
+    def __variable_parse_float(self, json_node, iden) -> "WatchableVariable":
+        bits = 32
+
+        return self.__get_var_from_pool(iden, lambda : 
+            AccumulatedVariable(BitCollector(FloatProcessor(), bits), callback=self.nue.set)
+        )
 
     def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
         return SimpleNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]), 
@@ -153,7 +164,6 @@ class JsonVariableFactory(VariableFactory):
         step_spl = str(step).split(".")
         decimals = 0
         if len(step_spl) > 1: 
-            print(step_spl)
             decimals = step_spl[1]
         
         return NumberFormatNotification(json_node["title"], json_node["message"], NotificationStyles.from_iden(json_node["style"]),
