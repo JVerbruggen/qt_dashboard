@@ -89,6 +89,16 @@
         "6841025": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Balancing active" },
         "6841026": { "type":"simple", "priority": 1, "style":"warning", "title": "Battery - CHRGS:", "message":"Balancing done" },
 
+        "6841110": { "type":"multiple", "priority": 1, "style":"info", "title": "Battery - CHRGA:", "messages":[
+            "Charging not allowed", "Charging is allowed"
+        ]},
+        "684112407": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - CHRGV:", "bits":24, "offset": 0, "step":0.1, "message":"{}mV" },
+        "684115707": { "type":"number-unsign", "priority": 1, "style":"info", "title": "Battery - CHRGC:", "bits":24, "offset": 0, "step":1, "message":"{}mA" },
+        
+        "6841210": { "type":"multiple", "priority": 1, "style":"info", "title": "Battery - INSUC:", "messages":[
+            "Insulation not done or completed with error", "Insulation completed successfully without error"
+        ]},
+
         "6000317": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Input Current:", "bits":32, "offset": 0, "step":1, "message":"{}A" },
         "6004717": { "type":"float", "priority": 1, "style":"info", "title": "MPPT - Input Voltage:", "bits":32, "offset": 0, "step":1, "message":"{}V" },
 
