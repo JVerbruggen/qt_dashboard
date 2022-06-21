@@ -5,6 +5,7 @@ from PySide6 import QtCore, QtGui
 class HMIQtPainter(Painter):
     """Implementation for working with QT"""
 
+    GAUGE_XS = 12
     BAR_FONT_SIZE = 15
     HINT_FONT_SIZE = 18
     VALUE_FONT_SIZE = 25
@@ -104,6 +105,11 @@ class HMIQtPainter(Painter):
         display_hintvalues_font.setBold(True)
         display_hintvalues_font.setLetterSpacing(QtGui.QFont.SpacingType.AbsoluteSpacing, 1)
 
+        gauge_xs = QtGui.QFont()
+        gauge_xs.setPixelSize(self.GAUGE_XS)
+        gauge_xs.setBold(True)
+        gauge_xs.setLetterSpacing(QtGui.QFont.SpacingType.AbsoluteSpacing, 1)
+
         times_sm_bold = QtGui.QFont("Times", 12)
         times_sm_bold.setBold(True)
 
@@ -114,4 +120,5 @@ class HMIQtPainter(Painter):
             "GaugeLG": display_description_font,
             "GaugeMD": display_value_font,
             "GaugeSM": display_hintvalues_font,
+            "GaugeXS": gauge_xs,
         }

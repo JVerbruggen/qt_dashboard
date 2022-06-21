@@ -84,7 +84,7 @@ class BarDisplay(Drawable):
 
     def __draw_info(self, painter: Painter):
         painter.draw_text_at(self.cx, self.cy - 55, self.width, self.height, (255, 255, 255, 255),
-                             self.display_description, "TimesMD")
+                             self.display_description, "GaugeXS")
 
         painter.draw_text_at(self.cx, self.cy - 35, self.width, self.height, (255, 255, 255, 255),
-                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "TimesMD")
+                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "GaugeXS")
