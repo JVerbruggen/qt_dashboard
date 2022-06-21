@@ -9,7 +9,7 @@ from components.variable.simple_variable import SimpleVariable, SimpleRangeVaria
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_processor import LittleEndianProcessor
+from components.variable.processor.little_endian_byte_processor import LittleEndianByteProcessor
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor

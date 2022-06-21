@@ -28,6 +28,7 @@ class SetupV1(Setup):
             [
                 Notification("This is a warning", NotificationStyles.WARNING()),
                 Notification("This is also a warning", NotificationStyles.CRUCIAL()),
+                Notification()
             ]),
         }
 

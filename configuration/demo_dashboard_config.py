@@ -10,7 +10,7 @@ from components.variable.notification import StaticNotificationList, Notificatio
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_processor import LittleEndianByteProcessor
+from components.variable.processor.little_endian_byte_processor import LittleEndianByteProcessor
 from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
@@ -144,7 +144,8 @@ class DemoDashboardConfig(DashboardConfig):
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
             SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 
-            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=100), window_width-270, 100, 250, 400, 50)
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=100), window_width-270, 100, 250, 400, 50),
+            
             BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200,
                        display_description="MOTOR SPEED", display_unit="rpm")
         ]
