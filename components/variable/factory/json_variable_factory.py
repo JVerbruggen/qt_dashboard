@@ -32,6 +32,10 @@ class JsonVariableFactory(VariableFactory):
 
     def set_update_event(self, nue: NotificationUpdateEvent):
         self.nue = nue
+    
+    def get_variable(self, identifier: str):
+        if identifier not in self.variable_pool: return None
+        return self.variable_pool[identifier]
 
     def __get_json_contents(self, filename):
         with open(filename, 'r') as f:
@@ -121,12 +125,17 @@ class JsonVariableFactory(VariableFactory):
         bits = json_node["bits"]
         offset = 0 if "offset" not in json_node else json_node["offset"]
         step = 1 if "step" not in json_node else json_node["step"]
+        max_val = 0
+        if "max" in json_node: max_val = json_node["max"]
+        else: max_val = offset + step*(2**bits)
 
-        return self.__get_var_from_pool(iden, lambda:
-        MapperVariable(
-            AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set),
-            offset,
-            step
+        return self.__get_var_from_pool(iden, lambda : 
+            MapperVariable(
+                AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                offset, 
+                step,
+                max_val
+            )
         )
                                         )
 
@@ -134,24 +143,34 @@ class JsonVariableFactory(VariableFactory):
         bits = json_node["bits"]
         offset = 0 if "offset" not in json_node else json_node["offset"]
         step = 1 if "step" not in json_node else json_node["step"]
+        max_val = 0
+        if "max" in json_node: max_val = json_node["max"]
+        else: max_val = offset + step*(2**bits)
 
-        return self.__get_var_from_pool(iden, lambda:
-        MapperVariable(
-            TwosComplementMapper(
-                AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set),
-                from_number=2 ** (bits - 1), add=-(2 ** bits)
-            ),
-            offset,
-            step
+        return self.__get_var_from_pool(iden, lambda : 
+            MapperVariable(
+                TwosComplementMapper(
+                    AccumulatedVariable(InverseOrderBitCollector(BigEndianBitProcessor(), bits), callback=self.nue.set), 
+                    from_number=2**(bits-1), add=-(2**bits)
+                ), 
+                offset,
+                step,
+                max_val
+            )
         )
                                         )
 
     def __variable_parse_float(self, json_node, iden) -> "WatchableVariable":
         bits = 32
 
-        return self.__get_var_from_pool(iden, lambda:
-        AccumulatedVariable(BitCollector(FloatProcessor(), bits), callback=self.nue.set)
-                                        )
+        return self.__get_var_from_pool(iden, lambda : 
+            MapperVariable(
+                AccumulatedVariable(BitCollector(FloatProcessor(), bits), callback=self.nue.set),
+                0,
+                1,
+                0
+            )
+        )
 
     def __parse_notification_simple(self, json_node, variable: "WatchableVariable") -> "Notification":
         return SimpleNotification(json_node["title"], json_node["message"],
