@@ -7,7 +7,7 @@ import math
 @dataclass
 class NotificationBox(Drawable):
     """
-    A box of notifications ;)
+    A box of notifications
     """
     PADDING = 10
 
@@ -21,20 +21,15 @@ class NotificationBox(Drawable):
     def __draw_notifications(self, painter: Painter):
         display_count = math.floor(self.h/(self.notification_height+NotificationBox.PADDING))
 
-        for i in range(min(display_count, len(self.notification_list.notifications))):
+        notifications = self.notification_list.get_all().items()
+
+        for i,(iden,n) in zip(range(display_count), notifications):
             nx = self.x
             ny = self.y + i*self.notification_height + i*NotificationBox.PADDING
             nw = self.w
             nh = self.notification_height
 
-            n = self.notification_list.notifications[i]
             n.draw(painter, nx, ny, nw, nh)
 
     def draw(self, painter: Painter):
         self.__draw_notifications(painter)
-
-        # painter.setPen(utils.drawing.default_line_pen())
-        # utils.drawing.draw_box(painter, self.x, self.y, self.w, self.h)
-
-        
-        

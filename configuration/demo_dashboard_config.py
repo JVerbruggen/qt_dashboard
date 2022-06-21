@@ -6,13 +6,16 @@ from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
+from components.variable.notification import StaticNotificationList, Notification, SimpleNotification, NotificationStyles, NotificationUpdateEvent
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
 from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_processor import LittleEndianProcessor
+from components.variable.processor.little_endian_processor import LittleEndianByteProcessor
+from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
+from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper, ToIntegerMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
 from utils.context.context import Context
@@ -24,6 +27,8 @@ class DemoDashboardConfig(DashboardConfig):
     Demo dashboard configuration.
     Provides exact layout of all elements.
     """
+
+    NOTIFICATION_KEY = "notifications"
 
     PAGE_IDEN_MAIN = "main"
     PAGE_IDEN_MSG = "messages"
@@ -42,11 +47,16 @@ class DemoDashboardConfig(DashboardConfig):
     BAR_OFFX = 500
     BAR_OFFy = 300
 
-    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), environment: {} = {}):
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), incoming_bytes_factory: VariableFactory, environment: {} = {}):	
         self.supervisor = supervisor
-        self.environment = environment
         self.window = window
         self.context = context
+        self.incoming_bytes_factory = incoming_bytes_factory
+
+        self.nue = NotificationUpdateEvent()
+        incoming_bytes_factory.set_update_event(self.nue)
+        self.notification_variables = incoming_bytes_factory.parse_variables()
+        self.notifications = incoming_bytes_factory.get_notifications()
 
         self.pages = {
             self.PAGE_IDEN_MAIN: self.__page_main(window),
@@ -81,9 +91,8 @@ class DemoDashboardConfig(DashboardConfig):
         notification_height = 70
 
         return [
-            NotificationBox(self.environment["notifications"], notification_paddingx, notification_paddingy,
-                            window_width - notification_paddingx * 2, window_height - notification_paddingy * 2,
-                            notification_height)
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=1), notification_paddingx, notification_paddingy, 
+                window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
         ]
 
     def __page_main(self, window):
@@ -103,37 +112,13 @@ class DemoDashboardConfig(DashboardConfig):
         variable_on = SimpleVariable(1)
         variable_onoff_2000 = IntervalOnOffVariable(self.context, 2000)
 
-        proxied_variable = ProcessedVariable(0, LittleEndianProcessor())
-        proxy_variable = ProxyVariable({0: proxied_variable})
+        for iden, var in self.notification_variables.items():
+            self.supervisor.register(iden, var, ByteMapper())
 
-        # notification_list = StaticNotificationList(notifications=
-        #     [
-        #         Notification("This is a warning", NotificationStyles.WARNING()),
-        #         Notification("This is also a warning", NotificationStyles.CRUCIAL()),
-        #     ])
-
-        proxy_cont_tx_status_stat_config = {i: SimpleVariable(0) for i in range(8)}
-        proxy_cont_tx_status_stat = Proxy8BitVariable(proxy_cont_tx_status_stat_config)
-
-        proxy = ProxyVariableWithState(state_byte_index=0, states={
-            b'00': ProxyVariable({
-                0: None,
-                1: proxy_cont_tx_status_stat,
-                2: None,
-                3: None,
-                4: None,
-                5: None,
-                6: None,
-                7: None,
-            }),
-        })
-
-        # self.supervisor.register('0x18', variable_speed, TwoBytesHexToDecMapper())
-        # self.supervisor.register('0x687', tempvariable_battery, TwoBytesHexToDecMapper())     # Battery status
-        # self.supervisor.register('0x69', proxy_variable, ByteMapper())
-        self.supervisor.register('0x420', proxy, ByteMapper())
-        # self.supervisor.start()
-
+        self.supervisor.register("0x684", variable_speed, ToIntegerMapper(1))
+        
+        self.supervisor.start()
+        
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
                   display_description="SPEED", display_unit="km/h", hint_range=13),
@@ -156,20 +141,10 @@ class DemoDashboardConfig(DashboardConfig):
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
                   display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
-            SvgIndicator(Icons.LEFT_ARROW, proxied_variable, 150, 150, 100, Colors.GREEN),
-            SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.GREEN),
-            SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.GREEN),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
+            SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[7], window_width - 100, 300, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[6], window_width - 100, 350, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[5], window_width - 100, 400, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[4], window_width - 100, 450, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[3], window_width - 100, 500, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[2], window_width - 100, 550, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[1], window_width - 100, 600, 50, Colors.GREEN),
-            SvgIndicator(Icons.UNKNOWN, proxy_cont_tx_status_stat_config[0], window_width - 100, 650, 50, Colors.GREEN),
-
-            NotificationBox(self.environment["notifications"], window_width - 270, 100, 250, 400, 50),
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=100), window_width-270, 100, 250, 400, 50)
             BarDisplay(variable_motorspeed, window_width / 2 + self.BAR_OFFX, window_height - self.BAR_OFFy, 100, 200,
                        display_description="MOTOR SPEED", display_unit="rpm")
         ]

@@ -1,8 +1,7 @@
 from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass
 
-
-@dataclass(slots=True)
+@dataclass
 class ProxyVariable(WatchableVariable):
     """
     A variable that proxies assigned value to 8 underlying variables.
@@ -23,9 +22,13 @@ class ProxyVariable(WatchableVariable):
             if variable is None: continue
             variable.set_value(byte)
 
-
-@dataclass(slots=True)
+@dataclass
 class ProxyVariableWithState(WatchableVariable):
+    """
+    Proxy variable that switches state.
+    State specification is given by incoming value at set_value, by the configured state_byte_index.
+    I.e. if state_byte_index = 0, the first of 8 bytes will determine the state that is returned.
+    """
     state_byte_index: int
     states: dict[int, WatchableVariable]
 
