@@ -3,15 +3,18 @@ import struct
 
 ENCODING = 'utf-8'
 
+
 def float_to_bits(f):
     s = struct.pack('>f', f)
     return struct.unpack('>l', s)[0]
+
 
 def str_to_intlist(s: str):
     l = []
     for c in s:
         l += [int(c)]
     return l
+
 
 def test_processor():
     processor = FloatProcessor()

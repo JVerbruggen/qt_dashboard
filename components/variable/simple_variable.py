@@ -2,6 +2,7 @@ from components.variable.watchable_variable import WatchableRangeVariable, Watch
 from collections.abc import Callable
 from dataclasses import dataclass, field
 
+
 class SimpleRangeVariable(WatchableRangeVariable):
     """
     A simple implementation of the WatchableRangeVariable 
@@ -30,7 +31,7 @@ class SimpleVariable(WatchableVariable):
     A simple implementation of the WatchableVariable 
     """
 
-    def __init__(self, default_value=0, callback: Callable[[], []]=None):
+    def __init__(self, default_value=0, callback: Callable[[], []] = None):
         self.value = default_value
         self.callback = callback
 
@@ -40,6 +41,7 @@ class SimpleVariable(WatchableVariable):
     def set_value(self, value):
         self.value = value
         if self.callback is not None: self.callback()
+
 
 @dataclass
 class WrappedVariable(WatchableVariable):
@@ -52,6 +54,7 @@ class WrappedVariable(WatchableVariable):
 
     def set_value(self, value):
         [c.set_value(value) for c in self.children]
+
 
 @dataclass
 class MapperVariable(WatchableRangeVariable):

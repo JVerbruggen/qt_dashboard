@@ -1,6 +1,7 @@
-from components.variable.processor.little_endian_processor import LittleEndianByteProcessor
+from components.variable.processor.little_endian_byte_processor import LittleEndianByteProcessor
 
 ENCODING = 'utf-8'
+
 
 def test_conversion():
     processor = LittleEndianByteProcessor()

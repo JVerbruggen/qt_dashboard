@@ -7,7 +7,7 @@ from utils.context.context import Context
 from components.variable.factory.json_variable_factory import JsonVariableFactory
 
 
-class DemoSetup(Setup):
+class SetupV1(Setup):
     """
     Demo app setup.
     Works without serial connection.

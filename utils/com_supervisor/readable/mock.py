@@ -1,8 +1,9 @@
 from utils.com_supervisor.readable.readable import Readable
 import time
-from typing import Callable
+from typing import Callable, Dict
 import random
 from utils.bytes import *
+
 
 class Mock(Readable):
     """
@@ -11,7 +12,7 @@ class Mock(Readable):
     Identifiers to pick from are given in the policy. The function that is called should return 8 bytes of data in string format.
     """
 
-    def __init__(self, interval: float=1.0, encoding: str = "utf-8", policy: dict[str, Callable[[], str]] = dict()):
+    def __init__(self, interval: float = 1.0, encoding: str = "utf-8", policy: Dict[str, Callable[[], str]] = dict()):
         self.interval = interval
         self.encoding = encoding
         self.policy = policy
@@ -29,7 +30,7 @@ class Mock(Readable):
 
     def __enter__(self):
         return self
-    
+
     def __exit__(self, *args, **kwargs):
         pass
 
@@ -42,13 +43,14 @@ class Mock(Readable):
     def take_from(items: list[str]):
         return random.choice(items)
 
-    increment_state = {i : 0 for i in range(8)}
+    increment_state = {i: 0 for i in range(8)}
+
     def increment(index: int, base: list = ["00" for _ in range(8)]):
         incremented = int_to_byte_str(Mock.increment_state[index])
         Mock.increment_state[index] = (Mock.increment_state[index] + 1) % 256
 
         return " ".join(incremented if i == index else base[i] for i in range(8))
-    
+
     def increment_multiple(indices: list[int], base: list = ["00" for _ in range(8)]):
         incremented = {}
         for index in indices:

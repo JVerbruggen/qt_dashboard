@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from components.variable.collector.byte_collector import Collector
 from collections.abc import Callable
 
+
 @dataclass
 class AccumulatedVariable(WatchableVariable):
     """
@@ -18,8 +19,6 @@ class AccumulatedVariable(WatchableVariable):
     def set_value(self, value: int):
         """ Value is a byte """
         result = self.collector.add_to_buffer(value)
-        if result is not None: 
+        if result is not None:
             print("Accumulated", result)
             if self.callback: self.callback()
-        
-

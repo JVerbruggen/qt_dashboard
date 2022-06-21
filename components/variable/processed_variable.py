@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from components.variable.processor.byte_processor import ByteProcessor
 from typing import Any
 
+
 @dataclass
 class ProcessedVariable(WatchableVariable):
     value: Any

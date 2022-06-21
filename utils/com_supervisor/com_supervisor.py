@@ -1,6 +1,7 @@
 from utils.com_supervisor.mapping.mapper import Mapper
 from components.variable.watchable_variable import WatchableVariable
 
+
 class ComSupervisor():
     """
     Interface

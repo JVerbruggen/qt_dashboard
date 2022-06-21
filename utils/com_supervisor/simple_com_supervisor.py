@@ -1,10 +1,10 @@
 import json
 from threading import Thread, Event
 from utils.com_supervisor.com_supervisor import ComSupervisor
-from utils.com_supervisor.mapping.mapper import Mapper
 from utils.com_supervisor.readable.readable import Readable
 from functools import partial
 import sys
+
 
 class SimpleComSupervisor(ComSupervisor):
     """
@@ -15,7 +15,9 @@ class SimpleComSupervisor(ComSupervisor):
 
     ENCODING = 'utf-8'
 
-    def __init__(self, readable: Readable, mappings: dict = dict()):
+    def __init__(self, readable: Readable, mappings=None):
+        if mappings is None:
+            mappings = dict()
         self.mappings = mappings
         self.readable = readable
 
@@ -53,7 +55,7 @@ class SimpleComSupervisor(ComSupervisor):
                 raw_encoded = r.read()
                 raw = raw_encoded.decode(self.ENCODING)
                 if len(raw) == 0: continue
-                data = json.loads(raw) # TODO: Should be unnecessary
+                data = json.loads(raw)  # TODO: Should be unnecessary
 
                 identifier = data["identifier"]
                 value = data["value"]
@@ -61,5 +63,3 @@ class SimpleComSupervisor(ComSupervisor):
                 by = bytes(value, self.ENCODING)
 
                 self.__update_variable(identifier, by)
-
-

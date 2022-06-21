@@ -2,6 +2,7 @@ from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass, field
 from utils.bytes import *
 
+
 @dataclass
 class Proxy8BitVariable(WatchableVariable):
     """
@@ -22,7 +23,3 @@ class Proxy8BitVariable(WatchableVariable):
             var = self.configuration[i]
             value = int(v)
             var.set_value(value)
-
-        
-        
-

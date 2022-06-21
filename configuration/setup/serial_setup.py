@@ -4,6 +4,7 @@ from utils.com_supervisor.readable.serial import SerialReadable
 from configuration.setup.setup import Setup
 from utils.context.context import Context
 
+
 class SerialSetup(Setup):
     """
     App setup with serial communication.
