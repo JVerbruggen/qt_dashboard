@@ -1,4 +1,4 @@
-from configuration.demo_dashboard_config import DemoDashboardConfig
+from configuration.dashboard_config_v1 import DashboardConfigV1
 from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
 from utils.com_supervisor.readable.mock import Mock
 from configuration.setup.setup import Setup
@@ -27,7 +27,7 @@ class SetupV1(Setup):
 
         supervisor = SimpleComSupervisor(readable)
         notification_variable_factory = JsonVariableFactory()
-        config = DemoDashboardConfig(
+        config = DashboardConfigV1(
             context=context,
             supervisor=supervisor,
             window=window,
