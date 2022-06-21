@@ -9,12 +9,14 @@ class Painter:
     FONT_SM = "TimesSM"
     FONT_SM_BOLD = "TimesSMBold"
 
-    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None, color=(255, 255, 255, 255)):
+    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None,
+                          color=(255, 255, 255, 255)):
         """
         Draws a line with rounded corners.
         """
 
-    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None, color: (int, int, int, int) = (255, 255, 255, 255)):
+    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None,
+                 color: (int, int, int, int) = (255, 255, 255, 255)):
         """
         Draws a part circle.
         """

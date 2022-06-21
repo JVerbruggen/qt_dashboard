@@ -3,7 +3,7 @@ class WatchableVariable:
     Interface
     A variable with a single value
     """
-    
+
     def get_value(self):
         raise NotImplementedError()
 

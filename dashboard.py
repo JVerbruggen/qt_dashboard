@@ -63,7 +63,6 @@ def get_setup() -> Setup:
 if __name__ == "__main__":
     app = QtWidgets.QApplication([])
     cp = QtGui.QGuiApplication.screens()[-1].availableGeometry().center()
-    
 
     setup = get_setup()
     context = HMIQtContext()
@@ -71,11 +70,10 @@ if __name__ == "__main__":
     widget = Dashboard(setup.create(context, WINDOW))
     # widget.setFixedSize(WINDOW[0], WINDOW[1])
     widget.setMouseTracking(True)
-    widget.setGeometry(cp.x()-WINDOW[0]/2, cp.y()-WINDOW[1]/2, WINDOW[0], WINDOW[1])
+    widget.setGeometry(cp.x() - WINDOW[0] / 2, cp.y() - WINDOW[1] / 2, WINDOW[0], WINDOW[1])
     # enable touch controls here
     widget.show()
     # widget.showFullScreen()
-
 
     if len(app.screens()) > 1:
         widget.setGeometry(app.screens()[1].availableGeometry())

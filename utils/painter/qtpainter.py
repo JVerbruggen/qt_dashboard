@@ -23,13 +23,15 @@ class HMIQtPainter(Painter):
         self.painter = painter
         self.fonts = self.__init_fonts()
 
-    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None, color: (int, int, int, int) = (255, 255, 255, 255)):
+    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None,
+                          color: (int, int, int, int) = (255, 255, 255, 255)):
         if width:
             self.painter.setPen(self.__default_line_pen(color, width=width))
 
         self.painter.drawLine(QtCore.QLine(from_x, from_y, to_x, to_y))
 
-    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None, color: (int, int, int, int) = (255, 255, 255, 255)):
+    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None,
+                 color: (int, int, int, int) = (255, 255, 255, 255)):
         if width:
             self.painter.setPen(self.__default_line_pen(color, width=width))
 
@@ -108,9 +110,8 @@ class HMIQtPainter(Painter):
         return {
             "TimesMD": QtGui.QFont("Times", 13),
             "TimesSM": QtGui.QFont("Times", 12),
-            "TimesSMBold" : times_sm_bold,
+            "TimesSMBold": times_sm_bold,
             "GaugeLG": display_description_font,
             "GaugeMD": display_value_font,
             "GaugeSM": display_hintvalues_font,
-            "BarMD": bar_md
         }

@@ -1,5 +1,6 @@
 from utils.bytes import *
 
+
 def test_bytes():
     assert byte_to_bit_string(b'00') == '00000000'
     assert byte_to_bit_string(b'0F') == '00001111'
@@ -8,6 +9,7 @@ def test_bytes():
     assert byte_to_bit_string(b'0A') == '00001010'
     assert byte_to_bit_string(b'0B') == '00001011'
     assert byte_to_bit_string(b'0C') == '00001100'
+
 
 def test_int_to_byte():
     assert int_to_byte_str(1) == "01"

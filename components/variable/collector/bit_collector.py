@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from components.variable.processor.bit_processor import BitProcessor
 from components.variable.collector.collector import Collector
 
+
 @dataclass
 class BitCollector(Collector):
     """
@@ -21,19 +22,20 @@ class BitCollector(Collector):
 
     def get_value(self) -> int:
         return self.result
-    
+
     def add_to_buffer(self, value) -> int:
         if self.bit_count_state >= self.bit_count:
             self.__reset()
 
         self.bit_buffer += [value]
         self.bit_count_state += 1
-        
+
         if self.bit_count_state >= self.bit_count:
             self.result = self.processor.process(self.bit_buffer)
             return self.result
-        
+
         return None
+
 
 @dataclass
 class InverseOrderBitCollector(Collector):
@@ -60,7 +62,7 @@ class InverseOrderBitCollector(Collector):
 
     def get_value(self) -> int:
         return self.result
-    
+
     def add_to_buffer(self, value) -> int:
         if self.bit_count_state >= self.bit_count:
             self.__reset()
@@ -71,9 +73,9 @@ class InverseOrderBitCollector(Collector):
         if len(self.bit_group_buffer) >= self.bitgroup_size:
             self.bit_buffer = self.bit_group_buffer + self.bit_buffer
             self.bit_group_buffer = []
-        
+
         if self.bit_count_state >= self.bit_count:
             self.result = self.processor.process(self.bit_buffer)
             return self.result
-        
+
         return None

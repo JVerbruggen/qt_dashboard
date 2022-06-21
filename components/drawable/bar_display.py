@@ -71,7 +71,8 @@ class BarDisplay(Drawable):
         painter.draw_box(self.cx, self.cy, self.width, self.height, (255, 255, 255, 255))
 
     def __fill_structure(self, painter):
-        fill_height = self.height / (self.watching_variable.get_upper_value() - self.watching_variable.get_lower_value()) * self.watching_variable.get_value()
+        fill_height = self.height / (
+                    self.watching_variable.get_upper_value() - self.watching_variable.get_lower_value()) * self.watching_variable.get_value()
         fill_height = self.height - fill_height + self.watching_variable.get_lower_value() + 2
 
         painter.draw_box_filled(self.cx + 1, self.cy + fill_height, self.width - 3, self.height - fill_height - 1,
@@ -83,7 +84,7 @@ class BarDisplay(Drawable):
 
     def __draw_info(self, painter: Painter):
         painter.draw_text_at(self.cx, self.cy - 55, self.width, self.height, (255, 255, 255, 255),
-                             self.display_description, "BarMD")
+                             self.display_description, "TimesMD")
 
         painter.draw_text_at(self.cx, self.cy - 35, self.width, self.height, (255, 255, 255, 255),
-                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "BarMD")
+                             "{:.{}f} ".format(self.value, self.display_precision) + self.display_unit, "TimesMD")

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from components.variable.processor.byte_processor import ByteProcessor
 from components.variable.collector.collector import Collector
 
+
 @dataclass
 class ByteCollector(Collector):
     """
@@ -20,7 +21,7 @@ class ByteCollector(Collector):
     def add_to_buffer(self, value) -> int:
         self.byte_buffer += [value]
         self.byte_count_state = len(byte_buffer)
-        
+
         if self.byte_count_state >= self.byte_count:
             result = self.processor.process(self.byte_buffer)
             self.__reset()

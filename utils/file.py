@@ -15,5 +15,5 @@ def read_file(filename: str) -> QtCore.QByteArray:
     #         data = f.readAll()
     # finally:
     #     f.close()
-    
+
     # return data

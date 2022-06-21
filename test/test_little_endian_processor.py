@@ -2,6 +2,7 @@ from components.variable.processor.little_endian_byte_processor import LittleEnd
 
 ENCODING = 'utf-8'
 
+
 def test_conversion():
     processor = LittleEndianByteProcessor()
     assert processor.process(bytes("01 00", ENCODING)) == 1

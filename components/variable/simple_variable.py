@@ -31,7 +31,7 @@ class SimpleVariable(WatchableVariable):
     A simple implementation of the WatchableVariable 
     """
 
-    def __init__(self, default_value=0, callback: Callable[[], []]=None):
+    def __init__(self, default_value=0, callback: Callable[[], []] = None):
         self.value = default_value
         self.callback = callback
 
@@ -41,6 +41,7 @@ class SimpleVariable(WatchableVariable):
     def set_value(self, value):
         self.value = value
         if self.callback is not None: self.callback()
+
 
 @dataclass
 class WrappedVariable(WatchableVariable):
@@ -53,6 +54,7 @@ class WrappedVariable(WatchableVariable):
 
     def set_value(self, value):
         [c.set_value(value) for c in self.children]
+
 
 @dataclass
 class MapperVariable(WatchableVariable):
