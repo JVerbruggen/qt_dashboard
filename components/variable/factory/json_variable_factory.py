@@ -1,12 +1,10 @@
-from dataclasses import dataclass, field
 import json
 from collections.abc import Callable
-from components.variable.watchable_variable import WatchableVariable
 from components.variable.factory.variable_factory import VariableFactory
 from components.variable.logic_variables import TwosComplementMapper
 from components.variable.proxy_variable import *
 from components.variable.proxy_8bit_variable import *
-from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable, MapperVariable
+from components.variable.simple_variable import SimpleVariable, MapperVariable
 from components.variable.accumulated_variable import AccumulatedVariable
 from components.variable.collector.bit_collector import BitCollector, InverseOrderBitCollector
 from components.variable.processor.bit_processor import BigEndianBitProcessor, FloatProcessor

@@ -1,5 +1,5 @@
 from components.variable.watchable_variable import WatchableVariable
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 
 @dataclass

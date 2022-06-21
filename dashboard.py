@@ -2,7 +2,6 @@ import sys
 
 from PySide6 import QtCore, QtWidgets, QtGui
 from configuration.dashboard_config import DashboardConfig
-from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.setup import Setup
 from dataclasses import dataclass
 

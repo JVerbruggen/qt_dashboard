@@ -2,7 +2,7 @@ from configuration.dashboard_config import DashboardConfig
 from utils.context.context import Context
 
 
-class Setup():
+class Setup:
     """
     Interface for app setup
     """

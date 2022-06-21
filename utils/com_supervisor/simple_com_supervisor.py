@@ -15,7 +15,9 @@ class SimpleComSupervisor(ComSupervisor):
 
     ENCODING = 'utf-8'
 
-    def __init__(self, readable: Readable, mappings: dict = dict()):
+    def __init__(self, readable: Readable, mappings=None):
+        if mappings is None:
+            mappings = dict()
         self.mappings = mappings
         self.readable = readable
 

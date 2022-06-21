@@ -2,21 +2,16 @@ from components.drawable.bar_display import BarDisplay
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
 from components.drawable.notificationbox import NotificationBox
-from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
+from components.drawable.svg_indicator import SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import StaticNotificationList, Notification, SimpleNotification, \
-    NotificationStyles, NotificationUpdateEvent
-from components.variable.proxy_variable import *
-from components.variable.proxy_8bit_variable import *
-from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_byte_processor import LittleEndianByteProcessor
+from components.variable.notification import StaticNotificationList, NotificationUpdateEvent
 from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
-from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper, ToIntegerMapper
+from utils.com_supervisor.mapping.simple_mapper import ToIntegerMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
 from utils.context.context import Context
