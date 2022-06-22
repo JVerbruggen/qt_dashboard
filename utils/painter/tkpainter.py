@@ -37,7 +37,35 @@ class TkPainter:
         """
         Draws a rounded box.
         """
-        self.canvas.create_rectangle(x,y,x+w,y+y,width=TkPainter.DEFAULT_LINE_WIDTH)
+        # self.canvas.create_rectangle(x,y,x+w,y+y,width=TkPainter.DEFAULT_LINE_WIDTH, outline=self.__from_rgb(color))
+
+        x1 = x
+        y1 = y
+        x2 = x+w
+        y2 = y+h
+        radius = 5
+        points = [x1+radius, y1,
+              x1+radius, y1,
+              x2-radius, y1,
+              x2-radius, y1,
+              x2, y1,
+              x2, y1+radius,
+              x2, y1+radius,
+              x2, y2-radius,
+              x2, y2-radius,
+              x2, y2,
+              x2-radius, y2,
+              x2-radius, y2,
+              x1+radius, y2,
+              x1+radius, y2,
+              x1, y2,
+              x1, y2-radius,
+              x1, y2-radius,
+              x1, y1+radius,
+              x1, y1+radius,
+              x1, y1]
+
+        self.canvas.create_polygon(points, smooth=True, fill="white", outline=self.__from_rgb(color))
     
     def draw_box_filled(self, x: int, y: int, w: int, h: int, color: (int,int,int,int), width: int=2):
         """
@@ -49,8 +77,7 @@ class TkPainter:
         """
         Draw text at given position and size.
         """
-
-        self.canvas.create_text(x+w/2,y+h/2,text=text, font="Arial 14 bold", width=w, anchor='center')
+        self.canvas.create_text(x+w/2,y+h/2,text=text, font="Arial 14 bold", width=w, anchor='center', fill=self.__from_rgb(color))
 
     def draw_svg(self, img, x: int, y: int, w: int, h: int, color: (int,int,int,int)):
         """

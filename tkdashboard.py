@@ -16,31 +16,34 @@ from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
 from configuration.setup.setup import Setup
 from utils.context.qt_context import HMIQtContext
+from utils.context.tk_context import TkContext
 import time
+from functools import partial
 
 WINDOW = (1600, 900)
 FPS = 60
-INTERVAL = 1/60
+INTERVAL = int(1000/FPS)
 
 class TkFrame(Frame):
-    def __init__(self, configuration: DashboardConfig):
+    def __init__(self, root: Tk, configuration: DashboardConfig):
         super().__init__()
         self.configuration = configuration
+        self.root = root
 
         self.initUI()
 
 
-    def __draw_loop_iter(self, painter):
+    def __draw_loop_iter(self, painter, cb):
+        self.canvas.delete("all")
         for drawable in self.configuration.get_drawables():
             drawable.draw(painter)
 
+        cb()
+        self.root.after(INTERVAL, partial(self.__draw_loop_iter, painter, cb))
+
 
     def start_drawing_loop(self, painter, cb):
-        while True:
-            self.canvas.delete("all")
-            time.sleep(INTERVAL)
-            self.__draw_loop_iter(painter)
-            cb()
+        self.__draw_loop_iter(painter, cb)
 
     def initUI(self):
         self.master.title("Lines")
@@ -53,12 +56,13 @@ class TkFrame(Frame):
 
 
 def main():
+    root = Tk()
+
     setup = DemoSetup()
-    context = HMIQtContext()
+    context = TkContext(root=root)
     configuration = setup.create(context, WINDOW)
 
-    root = Tk()
-    ex = TkFrame(configuration)
+    ex = TkFrame(root, configuration)
     root.geometry(f"{WINDOW[0]}x{WINDOW[1]}+10+10")
 
     cb = lambda: root.update()
