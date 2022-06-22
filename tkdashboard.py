@@ -15,7 +15,6 @@ from configuration.dashboard_config import DashboardConfig
 from configuration.setup.demo_setup import DemoSetup
 from configuration.setup.serial_setup import SerialSetup
 from configuration.setup.setup import Setup
-from utils.context.qt_context import HMIQtContext
 from utils.context.tk_context import TkContext
 import time
 from functools import partial
