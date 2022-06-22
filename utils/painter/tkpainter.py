@@ -19,12 +19,14 @@ class TkPainter:
         """
         Draws a line with rounded corners.
         """
-        self.canvas.create_line(from_x, from_y, to_x, to_y, width=width)
+        # self.canvas.create_line(from_x, from_y, to_x, to_y, width=width)
     
     def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None):
         """
         Draws a part circle.
         """
+        coords = cx-rad, cy-rad, 200, 200
+        self.canvas.create_arc(coords, start=0, extent=90, width=width)
     
     def draw_box(self, x: int, y: int, w: int, h: int, color: (int,int,int,int)):
         """

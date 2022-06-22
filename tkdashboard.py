@@ -28,7 +28,7 @@ class TkFrame(Frame):
         self.initUI()
 
 
-    def draw_loop(self):
+    def draw_loop(self, painter):
         for drawable in self.configuration.get_drawables():
             drawable.draw(painter)
 
@@ -39,6 +39,7 @@ class TkFrame(Frame):
 
         canvas = Canvas(self)
         painter = TkPainter(canvas)
+        self.draw_loop(painter)
 
 
         canvas.pack(fill=BOTH, expand=1)
