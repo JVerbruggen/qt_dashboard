@@ -68,6 +68,10 @@ def main():
     ex.start_drawing_loop(ex.painter, cb)
     root.mainloop()
 
+    context.stop_all()
+
+
+
 
 if __name__ == '__main__':
     main()
