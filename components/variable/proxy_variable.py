@@ -1,6 +1,7 @@
 from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass
 
+
 @dataclass
 class ProxyVariable(WatchableVariable):
     """
@@ -21,6 +22,7 @@ class ProxyVariable(WatchableVariable):
             variable = self.configuration[i]
             if variable is None: continue
             variable.set_value(byte)
+
 
 @dataclass
 class ProxyVariableWithState(WatchableVariable):

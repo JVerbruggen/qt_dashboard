@@ -1,8 +1,9 @@
 from configuration.demo_dashboard_config import DemoDashboardConfig
 from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
-from utils.com_supervisor.readable.serial import SerialReadable
+from utils.com_supervisor.readable.serial_readable import SerialReadable
 from configuration.setup.setup import Setup
 from utils.context.context import Context
+
 
 class SerialSetup(Setup):
     """

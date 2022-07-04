@@ -1,6 +1,6 @@
 from components.variable.watchable_variable import WatchableRangeVariable, WatchableVariable
-from collections.abc import Callable
 from utils.context.context import Context
+
 
 class DemoLoopingVariable(WatchableRangeVariable):
     """

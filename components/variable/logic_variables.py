@@ -1,6 +1,7 @@
 from components.variable.watchable_variable import WatchableVariable
 from dataclasses import dataclass, field
 
+
 @dataclass
 class OrVariable(WatchableVariable):
     """
@@ -13,6 +14,10 @@ class OrVariable(WatchableVariable):
         for child in self.children:
             if child.get_value() == 1: return 1
         return 0
+
+    def set_value(self, value):
+        raise NotImplementedError()
+
 
 @dataclass
 class TwosComplementMapper(WatchableVariable):

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from components.variable.processor.bit_processor import BitProcessor
 from components.variable.collector.collector import Collector
 
+
 @dataclass
 class BitCollector(Collector):
     """
@@ -32,15 +33,14 @@ class BitCollector(Collector):
         if self.bit_count_state >= self.bit_count:
             self.result = self.processor.process(self.bit_buffer)
             return self.result
-        
-        return None
+
 
 @dataclass
 class InverseOrderBitCollector(Collector):
     """
     Collects x bits, adds them to a buffer, 
     and passes it to a processor when buffer is full.
-    In stead of a normal bit collector,
+    Instead of a normal bit collector,
     the first bits that come in are grouped, and when
     the group is full, is added to the end of the buffer.
     """
@@ -75,5 +75,3 @@ class InverseOrderBitCollector(Collector):
         if self.bit_count_state >= self.bit_count:
             self.result = self.processor.process(self.bit_buffer)
             return self.result
-        
-        return None

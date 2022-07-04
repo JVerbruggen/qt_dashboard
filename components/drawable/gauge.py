@@ -1,6 +1,5 @@
 from utils.colors import Colors
 from utils.extra_math import *
-from utils.drawing import *
 from components.drawable.drawable import Drawable
 from components.variable.watchable_variable import WatchableRangeVariable
 from utils.painter.painter import Painter
@@ -96,11 +95,8 @@ class Gauge(Drawable):
         painter.draw_rounded_line(from_x, from_y, int(to_x), int(to_y), Colors.DEFAULT_LINE, width=self.ROD_DRAW_WEIGHT)
 
     def __draw_hints(self, painter: Painter):
-        hintvalues_distance = self.size / 2
-
         for (x, y, value) in self.hints:
             painter.draw_text_at(x - 25, y - 25, 50, 50, Colors.DEFAULT_LINE, str(value), self.display_hintvalues_font)
-            # painter.drawText(x - 25, y - 25, 50, 50, 0x0084, str(value))
 
     def __draw_info(self, painter: Painter):
         painter.draw_text_at(self.cx - self.size, int(self.cy + self.size * 0.4), self.size * 2, 100,

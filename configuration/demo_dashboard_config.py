@@ -1,27 +1,20 @@
-from typing import List
-
 from configuration.dashboard_config import DashboardConfig
 from components.drawable.gauge import Gauge
-from components.drawable.drawable import Drawable
 from components.drawable.notificationbox import NotificationBox
-from components.drawable.svg_indicator import SvgIndicator, SvgBlinker
+from components.drawable.svg_indicator import SvgBlinker
 
 from components.variable.demo_variables import *
 from components.variable.simple_variable import SimpleVariable, SimpleRangeVariable
-from components.variable.notification import StaticNotificationList, Notification, SimpleNotification, NotificationStyles, NotificationUpdateEvent
-from components.variable.proxy_variable import *
-from components.variable.proxy_8bit_variable import *
-from components.variable.processed_variable import ProcessedVariable
-from components.variable.processor.little_endian_processor import LittleEndianByteProcessor
+from components.variable.notification import StaticNotificationList, NotificationUpdateEvent
 from components.variable.factory.variable_factory import VariableFactory
 from components.drawable.page_selector import PageSelectorFactory
 
 from utils.com_supervisor.com_supervisor import ComSupervisor
-from utils.com_supervisor.mapping.simple_mapper import TwoBytesHexToDecMapper, ToIntegerMapper
 from utils.com_supervisor.mapping.byte_mapper import ByteMapper
 from utils.colors import Colors
 from utils.context.context import Context
 from utils.icons import Icons
+
 
 class DemoDashboardConfig(DashboardConfig):
     """
@@ -45,7 +38,8 @@ class DemoDashboardConfig(DashboardConfig):
     SMALL_GAUGE_SIZE = 75
     SMALL_GAUGE_HINTS = 5
 
-    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int), incoming_bytes_factory: VariableFactory, environment: {} = {}):	
+    def __init__(self, context: Context, supervisor: ComSupervisor, window: (int, int),
+                 incoming_bytes_factory: VariableFactory, environment: {} = {}):
         self.supervisor = supervisor
         self.window = window
         self.context = context
@@ -74,7 +68,7 @@ class DemoDashboardConfig(DashboardConfig):
         hit_button = self.page_selector.hits(x, y)
         if hit_button is None: return
         self.__select_page(hit_button.iden)
-    
+
     def __select_page(self, iden: str):
         if iden not in self.pages: return
 
@@ -89,8 +83,11 @@ class DemoDashboardConfig(DashboardConfig):
         notification_height = 70
 
         return [
-            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=1), notification_paddingx, notification_paddingy, 
-                window_width - notification_paddingx*2, window_height-notification_paddingy*2, notification_height)
+            NotificationBox(
+                StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=1),
+                notification_paddingx, notification_paddingy,
+                window_width - notification_paddingx * 2, window_height - notification_paddingy * 2,
+                notification_height)
         ]
 
     def __page_main(self, window):
@@ -111,33 +108,34 @@ class DemoDashboardConfig(DashboardConfig):
             self.supervisor.register(iden, var, ByteMapper())
 
         variable_speed = self.incoming_bytes_factory.get_variable("684032307")
-        
+
         self.supervisor.start()
-        
+
         return [
             Gauge(variable_speed, window_width / 2 - self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 0,
-                display_description="SPEED", display_unit="km/h", hint_range=13),
+                  display_description="SPEED", display_unit="km/h", hint_range=13),
             Gauge(variable_motorspeed, window_width / 2 + self.BIGGAUGE_OFFX, window_height - self.BIGGAUGE_OFFY, 1,
-                display_description="MOTOR SPEED", display_unit="rpm"),
+                  display_description="MOTOR SPEED", display_unit="rpm"),
             Gauge(variable_temp, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="TEMP", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 - self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_OUTER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_TOP, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
             Gauge(variable_dummy, window_width / 2 + self.GAUGE_OFFX_INNER, window_height - self.GAUGE_OFFY_BTM, 0,
-                display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
+                  display_description="dummy", size=self.SMALL_GAUGE_SIZE, hint_range=self.SMALL_GAUGE_HINTS),
 
             SvgBlinker(Icons.RIGHT_ARROW, variable_on, 150, 350, 100, 20, Colors.ORANGE),
             SvgBlinker(Icons.RIGHT_ARROW, variable_onoff_2000, 150, 550, 100, 20, Colors.RED),
 
-            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue, from_priority_level=100), window_width-270, 100, 250, 400, 50)
+            NotificationBox(StaticNotificationList(notifications=self.notifications, update_event=self.nue,
+                                                   from_priority_level=100), window_width - 270, 100, 250, 400, 50)
         ]

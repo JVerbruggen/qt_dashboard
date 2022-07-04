@@ -1,7 +1,8 @@
 from utils.com_supervisor.mapping.mapper import Mapper
 from components.variable.watchable_variable import WatchableVariable
 
-class ComSupervisor():
+
+class ComSupervisor:
     """
     Interface
     Supervises external communication to the dashboard variables

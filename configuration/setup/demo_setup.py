@@ -3,10 +3,9 @@ from utils.com_supervisor.simple_com_supervisor import SimpleComSupervisor
 from utils.com_supervisor.readable.mock import Mock
 from configuration.setup.setup import Setup
 from functools import partial
-from components.variable.notification import StaticNotificationList, Notification, NotificationStyles, NotificationUpdateEvent
 from utils.context.context import Context
-from components.variable.simple_variable import SimpleVariable
 from components.variable.factory.json_variable_factory import JsonVariableFactory
+
 
 class DemoSetup(Setup):
     """

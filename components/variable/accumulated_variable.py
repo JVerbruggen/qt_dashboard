@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from components.variable.collector.byte_collector import Collector
 from collections.abc import Callable
 
+
 @dataclass
 class AccumulatedVariable(WatchableVariable):
     """
