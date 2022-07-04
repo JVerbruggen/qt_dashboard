@@ -40,12 +40,11 @@ class TkFrame(Frame):
         self.master.title("Dashboard")
         self.pack(fill=BOTH, expand=1)
 
-        self.canvas = Canvas(self)
+        self.canvas = Canvas(self, highlightthickness=0)
         self.painter = TkPainter(self.canvas)
 
         self.canvas.pack(fill=BOTH, expand=1)
-        self.canvas.configure(bg="#444257")
-
+        self.canvas.configure(bg="#444257", borderwidth=0)
 
 def main():
     root = Tk(className="Dashboard", screenName="DB")
