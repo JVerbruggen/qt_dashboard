@@ -37,17 +37,18 @@ class TkFrame(Frame):
         self.__draw_loop_iter(painter, cb)
 
     def init_ui(self):
-        self.master.title("Lines")
+        self.master.title("Dashboard")
         self.pack(fill=BOTH, expand=1)
 
         self.canvas = Canvas(self)
         self.painter = TkPainter(self.canvas)
 
         self.canvas.pack(fill=BOTH, expand=1)
+        self.canvas.configure(bg="#444257")
 
 
 def main():
-    root = Tk()
+    root = Tk(className="Dashboard", screenName="DB")
 
     setup = DemoSetup()
     context = TkContext(root=root)

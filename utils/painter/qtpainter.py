@@ -12,16 +12,12 @@ class HMIQtPainter(Painter):
         self.painter = painter
         self.fonts = self.__init_fonts()
 
-    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, width: int = None):
-        if width:
-            self.painter.setPen(self.__default_line_pen(width=width))
-
+    def draw_rounded_line(self, from_x: int, from_y: int, to_x: int, to_y: int, color: (int,int,int,int), width: int = None):
+        self.painter.setPen(self.__default_line_pen(color=color, width=width))
         self.painter.drawLine(QtCore.QLine(from_x, from_y, to_x, to_y))
 
-    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, width: int = None):
-        if width:
-            self.painter.setPen(self.__default_line_pen(width=width))
-
+    def draw_arc(self, cx: int, cy: int, rad: int, start_deg: int, length_deg: int, color: (int,int,int,int), width: int = None):
+        self.painter.setPen(self.__default_line_pen(color=color, width=width))
         self.painter.drawArc(cx - rad, cy - rad, rad * 2, rad * 2, start_deg * 16, length_deg * 16)
 
     def draw_box(self, x: int, y: int, w: int, h: int, color: (int,int,int,int)):
