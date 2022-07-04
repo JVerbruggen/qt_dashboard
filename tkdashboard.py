@@ -1,14 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-ZetCode Tkinter tutorial
-
-The example draws lines on the Canvas.
-
-Author: Jan Bodnar
-Website: www.zetcode.com
-"""
-
 from tkinter import Tk, Canvas, Frame, BOTH
 from utils.painter.tkpainter import TkPainter
 from configuration.dashboard_config import DashboardConfig
@@ -21,16 +12,18 @@ from functools import partial
 
 WINDOW = (1600, 900)
 FPS = 60
-INTERVAL = int(1000/FPS)
+INTERVAL = int(1000 / FPS)
+
 
 class TkFrame(Frame):
     def __init__(self, root: Tk, configuration: DashboardConfig):
         super().__init__()
+        self.painter = None
+        self.canvas = None
         self.configuration = configuration
         self.root = root
 
-        self.initUI()
-
+        self.init_ui()
 
     def __draw_loop_iter(self, painter, cb):
         self.canvas.delete("all")
@@ -40,11 +33,10 @@ class TkFrame(Frame):
         cb()
         self.root.after(INTERVAL, partial(self.__draw_loop_iter, painter, cb))
 
-
     def start_drawing_loop(self, painter, cb):
         self.__draw_loop_iter(painter, cb)
 
-    def initUI(self):
+    def init_ui(self):
         self.master.title("Lines")
         self.pack(fill=BOTH, expand=1)
 
@@ -69,8 +61,6 @@ def main():
     root.mainloop()
 
     context.stop_all()
-
-
 
 
 if __name__ == '__main__':
