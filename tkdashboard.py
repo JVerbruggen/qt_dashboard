@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
-
+import tkinter
 from tkinter import Tk, Canvas, Frame, BOTH
 from utils.painter.tkpainter import TkPainter
 from configuration.dashboard_config import DashboardConfig
 from configuration.setup.demo_setup import DemoSetup
-from configuration.setup.serial_setup import SerialSetup
-from configuration.setup.setup import Setup
 from utils.context.tk_context import TkContext
-import time
 from functools import partial
 
 WINDOW = (1600, 900)
@@ -46,6 +43,9 @@ class TkFrame(Frame):
         self.canvas.pack(fill=BOTH, expand=1)
         self.canvas.configure(bg="#444257", borderwidth=0)
 
+    def button_press(self, event: tkinter.Event):
+        self.configuration.click_event(event.x, event.y)
+
 def main():
     root = Tk(className="Dashboard", screenName="DB")
 
@@ -55,6 +55,8 @@ def main():
 
     ex = TkFrame(root, configuration)
     root.geometry(f"{WINDOW[0]}x{WINDOW[1]}+10+10")
+
+    root.bind("<Button>", ex.button_press)
 
     cb = lambda: root.update()
     ex.start_drawing_loop(ex.painter, cb)
