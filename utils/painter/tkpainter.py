@@ -1,13 +1,16 @@
 from tkinter import *
 
+from utils.colors import Colors
+from utils.painter.painter import Painter
+
 
 def from_rgb(rgba):
-    """translates an rgb tuple of int to a tkinter friendly color code
+    """translates a rgb tuple of int to a tkinter friendly color code
     """
     return "#%02x%02x%02x" % rgba[0:3]
 
 
-class TkPainter:
+class TkPainter(Painter):
     """
     TK Painter
     """
@@ -67,12 +70,13 @@ class TkPainter:
                   x1, y1 + radius,
                   x1, y1]
 
-        self.canvas.create_polygon(points, smooth=True, fill="white", outline=from_rgb(color))
+        self.canvas.create_polygon(points, smooth=True, fill=from_rgb(Colors.BACKGROUND), outline=from_rgb(color))
 
     def draw_box_filled(self, x: int, y: int, w: int, h: int, color: (int, int, int, int), width: int = 2):
         """
         Draws a filled rounded box.
         """
+        self.draw_box(x, y, w, h, color)
 
     def draw_text_at(self, x: int, y: int, w: int, h: int, color: (int, int, int, int),
                      text: str, font_str: str = "TimesMD"):
